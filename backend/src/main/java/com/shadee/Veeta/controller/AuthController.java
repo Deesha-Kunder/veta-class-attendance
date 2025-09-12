@@ -1,9 +1,6 @@
 package com.shadee.Veeta.controller;
 
-import com.shadee.Veeta.dto.LoginRequest;
-import com.shadee.Veeta.dto.LoginResponse;
-import com.shadee.Veeta.dto.SignUpRequest;
-import com.shadee.Veeta.dto.SignUpResponse;
+import com.shadee.Veeta.dto.*;
 import com.shadee.Veeta.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +24,11 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest){
         SignUpResponse response = service.signUp(signUpRequest);
+        return ResponseEntity.ok(response);
+    }
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest){
+        RefreshTokenResponse response = service.refreshToken(refreshTokenRequest);
         return ResponseEntity.ok(response);
     }
 }

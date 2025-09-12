@@ -27,7 +27,10 @@ public class AuthService {
     @Autowired
     private PasswordEncoder encoder;
 
-    public LoginResponse login(LoginRequest loginRequest){
+    @Autowired
+    CustomUserDetailsService userDetailsService;
+
+    public LoginResponse login(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getEmail(),
@@ -35,7 +38,9 @@ public class AuthService {
                 )
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+        String accessToken = jwtUtils.generateJwtToken(authentication);
+        String refreshToken = jwtUtils.generateRefreshToken(authentication);
+
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         UserInfo userInfo = new UserInfo(
                 userDetails.getId(),
@@ -43,20 +48,20 @@ public class AuthService {
                 userDetails.getEmail(),
                 Role.valueOf(userDetails.getAuthorities().iterator().next().getAuthority())
         );
-        return new LoginResponse(jwt, userInfo);
+        return new LoginResponse(accessToken, refreshToken, userInfo);
     }
 
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
-        if(userRepository.existsByEmail(signUpRequest.getEmail())){
+        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new RuntimeException("Email already exist!");
         }
         Users user = new Users();
         user.setUsername(signUpRequest.getUsername());
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(encoder.encode(signUpRequest.getPassword()));
-        if(signUpRequest.getRole() != null){
+        if (signUpRequest.getRole() != null) {
             user.setRole(signUpRequest.getRole());
-        }else{
+        } else {
             user.setRole(Role.STUDENT);
         }
 
@@ -69,6 +74,22 @@ public class AuthService {
                 savedUser.getEmail(),
                 savedUser.getRole()
         );
-        return new SignUpResponse("User registered succesfully",userInfo);
+        return new SignUpResponse("User registered succesfully", userInfo);
+    }
+    public RefreshTokenResponse refreshToken(RefreshTokenRequest refreshTokenResponse){
+        String refreshToken = refreshTokenResponse.getRefreshToken();
+        String email = jwtUtils.getEmailFromToken(refreshToken);
+
+        CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(email);
+        if(jwtUtils.validateJwtToken(refreshToken,userDetails)){
+            String newAccessToken = jwtUtils.generateJwtToken(
+                    new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities())
+            );
+            return new RefreshTokenResponse(newAccessToken,refreshToken);
+        }
+        else {
+            throw new RuntimeException("Invalid refresh token");
+        }
+
     }
 }

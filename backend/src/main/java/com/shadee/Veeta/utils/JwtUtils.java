@@ -8,11 +8,9 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +22,10 @@ public class JwtUtils {
     private String secreteKey;
 
     @Value("${app.jwt.expirationMs}")
-    private int expirationMs;
+    private Long expirationMs;
+
+    @Value("${app.jwt.refreshExpiration}")
+    private Long refreshExpirationMs;
 
     private SecretKey key;
     @PostConstruct
@@ -36,6 +37,23 @@ public class JwtUtils {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Date expireDate = new Date(System.currentTimeMillis() + expirationMs);
+
+        Map<String, Object>claims = new HashMap<>();
+        claims.put("username",userDetails.getUsername());
+        claims.put("userId",userDetails.getId());
+        claims.put("role",userDetails.getAuthorities().iterator().next().getAuthority());
+
+        return Jwts.builder()
+                .subject(userDetails.getEmail())
+                .claims(claims)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(expireDate)
+                .signWith(key)
+                .compact();
+    }
+    public String generateRefreshToken(Authentication authentication){
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Date expireDate = new Date(System.currentTimeMillis() + refreshExpirationMs);
 
         Map<String, Object>claims = new HashMap<>();
         claims.put("username",userDetails.getUsername());
