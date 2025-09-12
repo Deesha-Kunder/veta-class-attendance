@@ -4,7 +4,6 @@ import com.shadee.Veeta.modelclass.Users;
 import com.shadee.Veeta.repository.UserRepository;
 import com.shadee.Veeta.security.CustomUserDetails;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

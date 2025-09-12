@@ -20,7 +20,7 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails {
 
     @EqualsAndHashCode.Include
-    private Long id;
+    private String id;
     private String username;
     private String email;
     private String password;

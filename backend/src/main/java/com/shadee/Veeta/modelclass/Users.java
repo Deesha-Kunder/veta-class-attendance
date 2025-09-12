@@ -21,9 +21,9 @@ import lombok.Setter;
 })
 public class Users {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long userId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id", updatable = false, nullable = false)
+    private String userId;
 
     @NotBlank
     private String username;
