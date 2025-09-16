@@ -18,13 +18,11 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
-        LoginResponse response = service.login(loginRequest);
-        return ResponseEntity.ok(response);
+        return service.login(loginRequest);
     }
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest){
-        SignUpResponse response = service.signUp(signUpRequest);
-        return ResponseEntity.ok(response);
+        return service.signUp(signUpRequest);
     }
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest){

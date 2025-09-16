@@ -7,6 +7,8 @@ import com.shadee.Veeta.repository.UserRepository;
 import com.shadee.Veeta.security.CustomUserDetails;
 import com.shadee.Veeta.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,7 +32,7 @@ public class AuthService {
     @Autowired
     CustomUserDetailsService userDetailsService;
 
-    public LoginResponse login(LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getEmail(),
@@ -48,12 +50,12 @@ public class AuthService {
                 userDetails.getEmail(),
                 Role.valueOf(userDetails.getAuthorities().iterator().next().getAuthority())
         );
-        return new LoginResponse(accessToken, refreshToken, userInfo);
+        return ResponseEntity.ok(new LoginResponse(accessToken, refreshToken, userInfo));
     }
 
-    public SignUpResponse signUp(SignUpRequest signUpRequest) {
+    public ResponseEntity<SignUpResponse> signUp(SignUpRequest signUpRequest) {
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new RuntimeException("Email already exist!");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new SignUpResponse("email already exist",null));
         }
         Users user = new Users();
         user.setUsername(signUpRequest.getUsername());
@@ -71,7 +73,8 @@ public class AuthService {
                 savedUser.getEmail(),
                 savedUser.getRole()
         );
-        return new SignUpResponse("User registered succesfully", userInfo);
+        return ResponseEntity.ok(new SignUpResponse("Registered Successfully",userInfo));
+
     }
     public RefreshTokenResponse refreshToken(RefreshTokenRequest refreshTokenResponse){
         String refreshToken = refreshTokenResponse.getRefreshToken();
