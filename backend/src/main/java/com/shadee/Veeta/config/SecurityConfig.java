@@ -55,9 +55,9 @@ public class SecurityConfig {
                 .exceptionHandling(exception ->exception.authenticationEntryPoint(authEntryPointJwt))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                .requestMatchers("api/auth/**").permitAll()
-                .requestMatchers("api/admin/**").hasRole("ADMIN")
-                .requestMatchers("api/student/**").hasRole("STUDENT")
+                .requestMatchers("/api/auth/signup","/api/auth/login" ).permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/student/**").hasRole("STUDENT")
                 .anyRequest().authenticated());
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);

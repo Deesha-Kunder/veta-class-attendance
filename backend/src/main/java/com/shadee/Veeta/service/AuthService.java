@@ -59,11 +59,8 @@ public class AuthService {
         user.setUsername(signUpRequest.getUsername());
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(encoder.encode(signUpRequest.getPassword()));
-        if (signUpRequest.getRole() != null) {
-            user.setRole(signUpRequest.getRole());
-        } else {
-            user.setRole(Role.STUDENT);
-        }
+        user.setRole(signUpRequest.getRole());
+
 
 
         Users savedUser = userRepository.save(user);
