@@ -11,10 +11,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.ahseed.veta.screen.admin.announcementscreen.AnnouncementScreen
+import com.ahseed.veta.screen.admin.announcementscreen.UploadedFileScreen
+import com.ahseed.veta.ui.theme.Purple40
+import com.ahseed.veta.ui.theme.Purple80
 
 @Composable
 fun AdminMainScreen() {
@@ -27,44 +33,56 @@ fun AdminMainScreen() {
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val showBottomBar = currentRoute in items.map { it.route }
     Scaffold(
         bottomBar = {
-            NavigationBar {
-                items.forEach { item ->
-                    NavigationBarItem(
-                        selected = currentRoute == item.route,
-                        onClick = {
-                            if (currentRoute != item.route) {
-                                navController.navigate(item.route) {
-                                    popUpTo(navController.graph.startDestinationId) {
-                                        saveState = true
+            if (showBottomBar) {
+                NavigationBar {
+                    items.forEach { item ->
+                        NavigationBarItem(
+                            selected = currentRoute == item.route,
+                            onClick = {
+                                if (currentRoute != item.route) {
+                                    navController.navigate(item.route) {
+                                        popUpTo(navController.graph.startDestinationId) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
                                 }
-                            }
-                        },
-                        icon = { Icon(imageVector = item.icon, contentDescription = "icon") },
-                        label = { Text(text = item.label) },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            unselectedIconColor = MaterialTheme.colorScheme.secondary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            unselectedTextColor = MaterialTheme.colorScheme.secondary
+                            },
+                            icon = { Icon(imageVector = item.icon, contentDescription = "icon") },
+                            label = { Text(text = item.label) },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Purple80,
+                                unselectedIconColor = Purple40,
+                                selectedTextColor = Purple80,
+                                unselectedTextColor = Purple40
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
     ) { innerPadding ->
 
-        NavHost(navController = navController,
+        NavHost(
+            navController = navController,
             startDestination = BottomNavAdminItem.Records.route,
-            modifier = Modifier.padding(innerPadding)){
-            composable  (route = BottomNavAdminItem.Register.route){}
-            composable (route = BottomNavAdminItem.Announcement.route){}
-            composable (route = BottomNavAdminItem.Records.route){}
-            composable (route = BottomNavAdminItem.Profile.route){}
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable(route = BottomNavAdminItem.Register.route) {}
+            composable(route = BottomNavAdminItem.Announcement.route) {
+                AnnouncementScreen(
+                    navController = navController
+                )
+            }
+            composable(route = BottomNavAdminItem.Records.route) {}
+            composable(route = BottomNavAdminItem.Profile.route) {}
+            composable("uploaded_file_screen") { UploadedFileScreen(navController = navController) }
+
+
         }
 
     }

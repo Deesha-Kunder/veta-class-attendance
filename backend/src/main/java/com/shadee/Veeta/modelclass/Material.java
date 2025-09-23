@@ -16,7 +16,7 @@ public class Material {
     private String fileId;
     @Column(name = "file_name",nullable = false)
     private String filename;
-    @Column(name = "file_Url",nullable = false)
+    @Column(name = "file_Path",nullable = false)
     private String filePath;
     @Column(name = "uploaded_by",nullable = false)
     private String uploadedBy;

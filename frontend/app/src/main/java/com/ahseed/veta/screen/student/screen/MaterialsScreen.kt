@@ -15,6 +15,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.DownloadForOffline
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material3.Button
@@ -41,52 +43,59 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ahseed.veta.screen.student.modelClass.MaterialItem
+import com.ahseed.veta.data.modelclass.MaterialItem
 import com.ahseed.veta.screen.student.viewmodel.MaterialViewModel
 import com.ahseed.veta.ui.theme.primary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MaterialScreen(
-     viewModel: MaterialViewModel = hiltViewModel(),
+    viewModel: MaterialViewModel = hiltViewModel(),
 //    navController: NavController
 ) {
     val materials by viewModel.materials.collectAsState()
     var selectedMaterial by remember { mutableStateOf<MaterialItem?>(null) }
     val sheetState = rememberModalBottomSheetState()
-    MaterialTopBar(onBackClick = {/*navController.popBackStack()*/})
-    LazyColumn {
-        items(materials) {material ->
-            MaterialRow(material = material,
-                onDownloadClick = {selectedMaterial = material})
+    Column() {
+        MaterialTopBar(onBackClick = {/*navController.popBackStack()*/ })
+        LazyColumn {
+            items(materials) { material ->
+                MaterialRow(
+                    material = material,
+                    onDownloadClick = { selectedMaterial = material })
+            }
         }
-    }
-    if(selectedMaterial != null){
-        ModalBottomSheet(
-            onDismissRequest = {selectedMaterial = null},
-            sheetState = sheetState
-        ) {
-             Text(
-                 text = "Download",
-                 style = MaterialTheme.typography.titleLarge,
-                 modifier = Modifier.padding(10.dp)
-             )
-            Text(
-                text = "Are you sure want to downlpad ${selectedMaterial!!.title} ?",
-                style =MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(
-                    horizontal = 16.dp, vertical = 8.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ){
-                OutlinedButton(onClick = {selectedMaterial = null}) {
-                    Text(
-                        text = "Cancel"
+        if (selectedMaterial != null) {
+            ModalBottomSheet(
+                onDismissRequest = { selectedMaterial = null },
+                sheetState = sheetState
+            ) {
+                Text(
+                    text = "Download",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(10.dp)
+                )
+                Text(
+                    text = "Are you sure want to download ${selectedMaterial!!.fileName} ?",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(
+                        horizontal = 16.dp, vertical = 8.dp
                     )
-                }
-                Button(onClick = {}) {
-                    Text("Download")
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    OutlinedButton(onClick = { selectedMaterial = null }) {
+                        Text(
+                            text = "Cancel"
+                        )
+                    }
+                    Button(onClick = {}) {
+                        Text("Download")
+                    }
                 }
             }
         }
@@ -94,8 +103,10 @@ fun MaterialScreen(
 }
 
 @Composable
-fun MaterialRow(material : MaterialItem,
-                onDownloadClick : (MaterialItem)-> Unit){
+fun MaterialRow(
+    material: MaterialItem,
+    onDownloadClick: (MaterialItem) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -103,7 +114,7 @@ fun MaterialRow(material : MaterialItem,
             .size(80.dp)
             .background(Color(0xFFF7F8FA), shape = RoundedCornerShape(20.dp)),
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
         Box(
             modifier = Modifier
                 .size(width = 70.dp, height = 60.dp)
@@ -111,7 +122,7 @@ fun MaterialRow(material : MaterialItem,
                 .background(color = primary, shape = RoundedCornerShape(15.dp)),
             contentAlignment = Alignment.Center
 
-        ){
+        ) {
             Icon(
                 Icons.Filled.PictureAsPdf,
                 contentDescription = "PDF"
@@ -120,17 +131,18 @@ fun MaterialRow(material : MaterialItem,
         Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = material.title,
+                text = material.fileName,
                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
             )
             Text(
-                text = material.postedDate,
+                text = material.createdAt,
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.DarkGray
             )
         }
-        IconButton(onClick =
-            {onDownloadClick(material)}){
+        IconButton(
+            onClick =
+                { onDownloadClick(material) }) {
             Icon(
                 imageVector = Icons.Outlined.Download,
                 contentDescription = "download"
@@ -143,30 +155,35 @@ fun MaterialRow(material : MaterialItem,
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MaterialTopBar(onBackClick: () -> Unit){
-    CenterAlignedTopAppBar(
-        title = {
-            Text(
-                text = "Materials",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+fun MaterialTopBar(onBackClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .size(56.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        IconButton(onClick = {}) {
+            Icon(
+                imageVector = Icons.Filled.ArrowBackIosNew,
+                contentDescription = "back"
             )
-        },
-        navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBackIosNew,
-                    contentDescription = "back"
-                )
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background
+        }
+        Text(
+            text = "Materials",
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
         )
-    )
+        IconButton(onClick = {}) {
+            Icon(
+                imageVector = Icons.Filled.DownloadForOffline,
+                contentDescription = "Downloaded"
+            )
+        }
+    }
 }
 
 @Preview(apiLevel = 33, showBackground = true)
 @Composable
-fun MaterialTopBarPreview(){
-   MaterialScreen()
+fun MaterialTopBarPreview() {
+    MaterialScreen()
 }

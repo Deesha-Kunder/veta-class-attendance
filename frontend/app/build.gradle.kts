@@ -69,5 +69,6 @@ dependencies {
     implementation(libs.converter.gson)
 
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation("androidx.documentfile:documentfile:1.1.0")
 
 }

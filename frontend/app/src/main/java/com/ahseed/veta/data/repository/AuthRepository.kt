@@ -42,7 +42,7 @@ class AuthRepository @Inject constructor(
         return if(response.isSuccessful && response.body() != null){
             Result.success(response.body()!!)
         }else{
-            Result.failure(Exception("SignUp Failed"))
+            Result.failure(Exception(response.message()))
         }
     }
     suspend fun refreshToken(request: RefreshTokenRequest): Result<RefreshTokenResponse>{

@@ -1,4 +1,4 @@
-package com.ahseed.veta.screen.student.screen.profile
+package com.ahseed.veta.screen.admin
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,26 +30,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ahseed.veta.screen.student.modelClass.StudentProfile
+import com.ahseed.veta.screen.student.modelClass.AdminProfile
+import com.ahseed.veta.screen.student.screen.profile.Profile
 import com.ahseed.veta.ui.theme.Purple80
 
 @Composable
-fun ProfileScreen(){
-    val profile = StudentProfile(
+fun AdminProfileScreen(){
+    val profile = AdminProfile(
         id = "12345",
         name = "Ethan Bennett",
         phoneNumber = "(555) 123-4567",
         email = "ethan.bennett@email.com",
-        profession = "Student",
-        profileUrl="",
-        joinedDate = "August 15, 2022",
-        courseHours = 120
+        profileUrl = "",
     )
     Profile(profile)
 }
 @Composable
-fun Profile( profile: StudentProfile
-    ){
+fun Profile( profile: AdminProfile
+){
     Column(
         modifier = Modifier.fillMaxSize().padding(10.dp),
     ){
@@ -98,16 +96,13 @@ fun Profile( profile: StudentProfile
                 text = "ID:99999",
                 style = MaterialTheme.typography.labelLarge,
 
-            )
+                )
         }
         Spacer(modifier = Modifier.height(20.dp))
         Text(text = "Details", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-        , modifier = Modifier.padding(8.dp))
+            , modifier = Modifier.padding(8.dp))
         ProfileDetailRow(label = "Phone Number", value = profile.phoneNumber)
         ProfileDetailRow(label = "Email ID", value = profile.email)
-        ProfileDetailRow(label = "Profession", value = profile.profession)
-        ProfileDetailRow(label = "Joined Date", value = profile.joinedDate)
-        ProfileDetailRow(label = "Allocated Course Hours", value = "${profile.courseHours} hours")
 
         Spacer(modifier = Modifier.weight(1f))
         Button(
@@ -126,6 +121,7 @@ fun Profile( profile: StudentProfile
             )
         }
     }
+
 }
 @Composable
 fun ProfileDetailRow(label: String, value: String) {
@@ -154,5 +150,5 @@ fun ProfileDetailRow(label: String, value: String) {
 @Preview(showBackground = true)
 @Composable
 fun previewww(){
-    ProfileScreen()
+    AdminProfileScreen()
 }

@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,6 +21,7 @@ import com.ahseed.veta.screen.student.screen.AttendanceScreen
 import com.ahseed.veta.screen.student.screen.MaterialScreen
 import com.ahseed.veta.screen.student.screen.ReportScreen
 import com.ahseed.veta.screen.student.screen.profile.ProfileScreen
+import com.ahseed.veta.ui.theme.Purple80
 
 @Composable
 fun UserMainScreen() {
@@ -52,10 +54,10 @@ fun UserMainScreen() {
                         icon = { Icon(imageVector = item.icon, contentDescription = item.label) },
                         label = { Text(text = item.label) },
                         colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = MaterialTheme.colorScheme.primary,
-                            unselectedIconColor = MaterialTheme.colorScheme.secondary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            unselectedTextColor = MaterialTheme.colorScheme.secondary
+                            selectedIconColor = Purple80,
+                            unselectedIconColor = Color.LightGray,
+                            selectedTextColor = Purple80,
+                            unselectedTextColor = Color.LightGray
                         )
                     )
                 }

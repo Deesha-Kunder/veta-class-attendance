@@ -12,6 +12,6 @@ public class UploadResponse {
     private String fileName;
     private String filePath;
     private String uploadedBy;
-    private String message;
     private String addedAt;
+    private String message;
 }

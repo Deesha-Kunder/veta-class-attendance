@@ -1,22 +1,20 @@
-package com.ahseed.veta.data.viewmodel
+package com.ahseed.veta.screen.auth
 
 import android.util.Log
+import android.util.Patterns
 import androidx.lifecycle.ViewModel
-import com.ahseed.veta.data.repository.AuthRepository
-import com.ahseed.veta.screen.auth.LoginUiState
-import com.ahseed.veta.screen.auth.SignUpUiState
-import jakarta.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import androidx.lifecycle.viewModelScope
 import com.ahseed.veta.data.modelclass.LoginRequest
 import com.ahseed.veta.data.modelclass.SignUpRequest
-import com.ahseed.veta.screen.auth.UiEvent
+import com.ahseed.veta.data.repository.AuthRepository
 import com.ahseed.veta.utils.ValidationUtil
 import com.ahseed.veta.utils.getMessage
 import com.ahseed.veta.utils.isValid
 import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
@@ -135,7 +133,7 @@ class AuthViewmodel @Inject constructor(
     }
 
     private fun isValidEmail(email: String): Boolean {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
     fun setRole(newRole: String) {

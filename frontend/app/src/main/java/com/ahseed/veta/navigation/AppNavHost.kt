@@ -1,7 +1,6 @@
 package com.ahseed.veta.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -10,9 +9,9 @@ import com.ahseed.veta.screen.auth.SignUpScreen
 
 @Composable
 fun AppNavHost(
-    navController: NavHostController = rememberNavController(),
     startDestination: String
 ) {
+    val navController = rememberNavController()
     NavHost(
         navController = navController,
         startDestination = startDestination
@@ -21,5 +20,6 @@ fun AppNavHost(
         composable("student_main") { UserMainScreen() }
         composable("login") { LoginScreen(navController = navController) }
         composable("signup") { SignUpScreen(navController = navController) }
+
     }
 }

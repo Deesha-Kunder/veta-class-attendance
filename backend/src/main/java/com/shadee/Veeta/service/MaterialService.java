@@ -15,8 +15,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class MaterialService {
-    private MaterialRepository repository;
-    private SupabaseStorageService supabaseService;
+    private final MaterialRepository repository;
+    private final SupabaseStorageService supabaseService;
 
     public UploadResponse uploadAndSave(MultipartFile file, String uploadedBy) throws IOException, InterruptedException {
         String fileId = UUID.randomUUID().toString();
@@ -44,6 +44,7 @@ public class MaterialService {
     }
 
     public List<Material> getAllFilesUploadedByAdmin(String uploadedBy) {
+        System.out.println(repository.findByUploadedByOrderByAddedAtDesc(uploadedBy));
         return repository.findByUploadedByOrderByAddedAtDesc(uploadedBy);
     }
 

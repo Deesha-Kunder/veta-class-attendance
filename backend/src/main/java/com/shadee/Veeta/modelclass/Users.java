@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +26,9 @@ public class Users {
     @Column(name = "user_id", updatable = false, nullable = false)
     private String userId;
 
-    @NotBlank
+    @NotBlank(message = "user can't ne empty")
+    @Size(min = 3, max = 20)
+    @Pattern(regexp = "^[a-zA-Z0-9_]+$")
     private String username;
 
     @NotBlank
@@ -33,6 +36,8 @@ public class Users {
     private String email;
 
     @JsonIgnore
+    @NotBlank
+    @Size(min = 8)
     private String password;
 
     @Enumerated(EnumType.STRING)
