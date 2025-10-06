@@ -18,8 +18,8 @@ public class MaterialController {
 
     @PostMapping("/admin/materials/upload")
     public ResponseEntity<UploadResponse> uploadFile(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("uploadedBy") String uploadedBy
+            @RequestPart("file") MultipartFile file,
+            @RequestPart("uploaded_by") String uploadedBy
     ) {
         try {
             if (file.isEmpty()) {
