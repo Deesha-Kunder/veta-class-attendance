@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,8 +25,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -52,6 +56,10 @@ fun AnnouncementScreen(
     var selectedFileName by remember { mutableStateOf("") }
 
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val uploadState = viewmodel.uploadState.collectAsState()
+
+
     val filePickerLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {
@@ -59,96 +67,121 @@ fun AnnouncementScreen(
                 selectedFileName = FileUtil.getFileNameFromUri(context, uri)
             }
         }
+    LaunchedEffect(uploadState.value) {
+        when (val state = uploadState.value) {
+            is UploadState.Success -> {
+                announcementText = ""
+                selectedFileUri = null
+                selectedFileName = ""
 
-    Column(
-        modifier = Modifier
-            .padding(10.dp)
-            .fillMaxSize()
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .size(56.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconButton(onClick = {
-                navController.popBackStack()
-            }) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBackIosNew,
-                    contentDescription = "back"
-                )
+                snackbarHostState.showSnackbar("Uploaded successfully")
             }
-            Text(
-                text = "Announcement",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-            )
-            IconButton(onClick = {
-                navController.navigate("uploaded_file_screen")
-            }) {
-                Icon(
-                    imageVector = Icons.Filled.Upload,
-                    contentDescription = "Uploaded"
-                )
+            is UploadState.Error ->{
+                snackbarHostState.showSnackbar("Upload Failed")
             }
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            OutlinedTextField(
-                value = selectedFileName.ifEmpty { announcementText },
-                onValueChange = { announcementText = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-                    .padding(5.dp),
-                placeholder = { Text(text = "Write your Announcement here") }
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            Button(
-                onClick = {
-                    filePickerLauncher.launch("application/pdf")
-                },
-                modifier = Modifier.wrapContentWidth(),
-                shape = MaterialTheme.shapes.medium,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Purple40
-                )
-            )
-            {
-                Icon(
-                    imageVector = Icons.Default.UploadFile,
-                    contentDescription = "Upload file"
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(text = "Upload File")
-            }
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        Button(
-            onClick = {
-                selectedFileUri?.let { uri ->
-                    viewmodel.uploadFromUri(context, uri)
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            shape = MaterialTheme.shapes.large,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Purple80
-            )
-        ) {
-            Text(
-                text = "Post Announcement",
-                style = MaterialTheme.typography.titleMedium
-            )
+            else -> Unit
+
         }
     }
+
+    Box() {
+        Column(
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxSize()
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .size(56.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                IconButton(onClick = {
+                    navController.popBackStack()
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBackIosNew,
+                        contentDescription = "back"
+                    )
+                }
+                Text(
+                    text = "Announcement",
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                )
+                IconButton(onClick = {
+                    navController.navigate("uploaded_file_screen")
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Upload,
+                        contentDescription = "Uploaded"
+                    )
+                }
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                OutlinedTextField(
+                    value = selectedFileName.ifEmpty { announcementText },
+                    onValueChange = { announcementText = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp)
+                        .padding(5.dp),
+                    placeholder = { Text(text = "Write your Announcement here") }
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                Button(
+                    onClick = {
+                        filePickerLauncher.launch("application/pdf")
+                    },
+                    modifier = Modifier.wrapContentWidth(),
+                    shape = MaterialTheme.shapes.medium,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Purple40
+                    )
+                )
+                {
+                    Icon(
+                        imageVector = Icons.Default.UploadFile,
+                        contentDescription = "Upload file"
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(text = "Upload File")
+                }
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            Button(
+                onClick = {
+                    selectedFileUri?.let { uri ->
+                        viewmodel.uploadFromUri(context, uri)
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = MaterialTheme.shapes.large,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Purple80
+                )
+            ) {
+                Text(
+                    text = "Post Announcement",
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+        }
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp)
+        )
+    }
+
 
 }

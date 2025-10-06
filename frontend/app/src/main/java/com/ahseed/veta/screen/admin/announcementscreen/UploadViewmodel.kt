@@ -16,7 +16,9 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 @HiltViewModel
 class UploadViewmodel @Inject constructor(
@@ -48,9 +50,10 @@ class UploadViewmodel @Inject constructor(
     }
 
     fun uploadFile(file: MultipartBody.Part, uploadedBy: String) {
+        val uploadedPart = uploadedBy.toRequestBody("text/plain".toMediaTypeOrNull())
         viewModelScope.launch {
             _uploadState.value = UploadState.Loading
-            val response = repository.uploadPdf(file, uploadedBy)
+            val response = repository.uploadPdf(file, uploadedPart)
             _uploadState.value = response.fold(
                 onSuccess = { UploadState.Success(it) },
                 onFailure = { UploadState.Error(it.message ?: "Error While uploading") }
@@ -63,7 +66,6 @@ class UploadViewmodel @Inject constructor(
             _fileState.value = FileState.Loading
             val adminId = prefs.getUserId() ?: ""
             val response = repository.getFilesByAdminId(adminId)
-            Log.i("GetFiles :",""+response)
             response.fold(
                 onSuccess = {
                     _materials.value = it

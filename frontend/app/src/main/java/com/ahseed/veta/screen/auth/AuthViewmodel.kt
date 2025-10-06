@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.ahseed.veta.data.modelclass.LoginRequest
 import com.ahseed.veta.data.modelclass.SignUpRequest
 import com.ahseed.veta.data.repository.AuthRepository
+import com.ahseed.veta.sharedpreferences.AuthPrefs
 import com.ahseed.veta.utils.ValidationUtil
 import com.ahseed.veta.utils.getMessage
 import com.ahseed.veta.utils.isValid
@@ -20,7 +21,8 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class AuthViewmodel @Inject constructor(
-    private val repository: AuthRepository
+    private val repository: AuthRepository,
+    private val prefs: AuthPrefs
 ) : ViewModel() {
     private val _loginState = MutableStateFlow<LoginUiState>(LoginUiState.Idle)
     val loginState: StateFlow<LoginUiState> = _loginState
@@ -32,26 +34,28 @@ class AuthViewmodel @Inject constructor(
     val role: StateFlow<String> = _role
 
     private val _usernameValidate = MutableStateFlow<String?>(null)
-    val usernameValidate : MutableStateFlow<String?> = _usernameValidate
+    val usernameValidate: MutableStateFlow<String?> = _usernameValidate
 
     private val _passwordValidate = MutableStateFlow<String?>(null)
-    val passwordValidate : MutableStateFlow<String?> = _passwordValidate
+    val passwordValidate: MutableStateFlow<String?> = _passwordValidate
 
     private val _emailValidate = MutableStateFlow<String?>(null)
-    val emailValidate : MutableStateFlow<String?> = _emailValidate
+    val emailValidate: MutableStateFlow<String?> = _emailValidate
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
-    fun validateUsername(username:String){
+    fun validateUsername(username: String) {
         val result = ValidationUtil.validateUsername(username)
         _usernameValidate.value = result.getMessage()
     }
-    fun validateEmail(email:String){
+
+    fun validateEmail(email: String) {
         val result = ValidationUtil.validateEmail(email)
         _emailValidate.value = result.getMessage()
     }
-    fun validatePassword(password:String){
+
+    fun validatePassword(password: String) {
         val result = ValidationUtil.validatePassword(password)
         _passwordValidate.value = result.getMessage()
     }
@@ -62,12 +66,16 @@ class AuthViewmodel @Inject constructor(
 
         if (!validateEmail.isValid()) {
             viewModelScope.launch {
-                _uiEvent.emit(UiEvent.ShowToast(validateEmail.getMessage()?:"Invalid email"))
+                _uiEvent.emit(UiEvent.ShowToast(validateEmail.getMessage() ?: "Invalid email"))
             }
         }
         if (!validatePassword.isValid()) {
             viewModelScope.launch {
-                _uiEvent.emit(UiEvent.ShowToast(validatePassword.getMessage()?:"Invalid password"))
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        validatePassword.getMessage() ?: "Invalid password"
+                    )
+                )
             }
         }
         viewModelScope.launch {
@@ -101,17 +109,25 @@ class AuthViewmodel @Inject constructor(
 
         if (!validateEmail.isValid()) {
             viewModelScope.launch {
-                _uiEvent.emit(UiEvent.ShowToast(validateEmail.getMessage()?:"Invalid email"))
+                _uiEvent.emit(UiEvent.ShowToast(validateEmail.getMessage() ?: "Invalid email"))
             }
         }
         if (!validatePassword.isValid()) {
             viewModelScope.launch {
-                _uiEvent.emit(UiEvent.ShowToast(validatePassword.getMessage()?:"Invalid password"))
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        validatePassword.getMessage() ?: "Invalid password"
+                    )
+                )
             }
         }
         if (!validateUsername.isValid()) {
             viewModelScope.launch {
-                _uiEvent.emit(UiEvent.ShowToast(validateUsername.getMessage()?:"Invalid username"))
+                _uiEvent.emit(
+                    UiEvent.ShowToast(
+                        validateUsername.getMessage() ?: "Invalid username"
+                    )
+                )
             }
         }
         viewModelScope.launch {
@@ -138,6 +154,10 @@ class AuthViewmodel @Inject constructor(
 
     fun setRole(newRole: String) {
         _role.value = newRole
+    }
+
+    fun logout() {
+        prefs.clearAuthData()
     }
 
 }

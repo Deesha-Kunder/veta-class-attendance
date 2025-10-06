@@ -76,7 +76,7 @@ fun MaterialScreen(
                     modifier = Modifier.padding(10.dp)
                 )
                 Text(
-                    text = "Are you sure want to download ${selectedMaterial!!.fileName} ?",
+                    text = "Are you sure want to download ${selectedMaterial!!.filename} ?",
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(
                         horizontal = 16.dp, vertical = 8.dp
@@ -131,11 +131,11 @@ fun MaterialRow(
         Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = material.fileName,
+                text = material.filename,
                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
             )
             Text(
-                text = material.createdAt,
+                text = material.addedAt,
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.DarkGray
             )

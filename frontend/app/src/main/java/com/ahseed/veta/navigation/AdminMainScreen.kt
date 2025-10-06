@@ -12,18 +12,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.ahseed.veta.screen.admin.AdminProfileScreen
+import com.ahseed.veta.screen.admin.RecordsScreen
+import com.ahseed.veta.screen.admin.RegisterStudentScreen
 import com.ahseed.veta.screen.admin.announcementscreen.AnnouncementScreen
 import com.ahseed.veta.screen.admin.announcementscreen.UploadedFileScreen
 import com.ahseed.veta.ui.theme.Purple40
 import com.ahseed.veta.ui.theme.Purple80
 
 @Composable
-fun AdminMainScreen() {
+fun AdminMainScreen(
+    parentNavController: NavHostController
+) {
     val navController = rememberNavController()
     val items = listOf(
         BottomNavAdminItem.Register,
@@ -72,14 +78,16 @@ fun AdminMainScreen() {
             startDestination = BottomNavAdminItem.Records.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(route = BottomNavAdminItem.Register.route) {}
+            composable(route = BottomNavAdminItem.Register.route) { RegisterStudentScreen()}
             composable(route = BottomNavAdminItem.Announcement.route) {
                 AnnouncementScreen(
                     navController = navController
                 )
             }
-            composable(route = BottomNavAdminItem.Records.route) {}
-            composable(route = BottomNavAdminItem.Profile.route) {}
+            composable(route = BottomNavAdminItem.Records.route) { RecordsScreen() }
+            composable(route = BottomNavAdminItem.Profile.route) {
+                AdminProfileScreen(navController =  parentNavController)
+            }
             composable("uploaded_file_screen") { UploadedFileScreen(navController = navController) }
 
 

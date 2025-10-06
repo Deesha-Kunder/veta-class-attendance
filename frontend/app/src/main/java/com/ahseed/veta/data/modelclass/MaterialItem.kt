@@ -2,10 +2,10 @@
 
     data class MaterialItem(
         val fileId: String,
-        val fileName: String,
+        val filename: String,
         val filePath: String,
         val uploadedBy: String,
-        val createdAt: String,
+        val addedAt: String,
     )
 
     data class UploadedResponse(

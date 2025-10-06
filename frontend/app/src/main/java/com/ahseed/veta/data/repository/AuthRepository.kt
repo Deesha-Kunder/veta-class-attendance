@@ -10,16 +10,21 @@ import com.ahseed.veta.data.modelclass.RefreshTokenResponse
 import com.ahseed.veta.data.modelclass.SignUpRequest
 import com.ahseed.veta.data.modelclass.SignUpResponse
 import com.ahseed.veta.screen.auth.LoginScreen
+import com.google.gson.GsonBuilder
 import jakarta.inject.Inject
 
 class AuthRepository @Inject constructor(
     private val authPrefs: AuthPrefs,
     private val authApi: AuthApi
 ) {
-    suspend fun login(request: LoginRequest): Result<LoginResponse>{
+    suspend fun login(request: LoginRequest): Result<LoginResponse> {
         val response = authApi.login(request)
-        Log.d("login",response.message())
-        return if(response.isSuccessful && response.body() != null){
+
+        val gson = GsonBuilder().setPrettyPrinting().create()
+        val json = gson.toJson(response.body())
+        return if (response.isSuccessful && response.body() != null) {
+
+            Log.d("LOGIN RESPONSE:", json)
             val body = response.body()!!
             authPrefs.saveAuthData(
                 accessToken = body.accessToken,
@@ -32,34 +37,36 @@ class AuthRepository @Inject constructor(
 
             )
             Result.success(body)
-        }else{
+        } else {
             Result.failure(Exception("Login Failed"))
         }
     }
-    suspend fun signup(request: SignUpRequest): Result<SignUpResponse>{
+
+    suspend fun signup(request: SignUpRequest): Result<SignUpResponse> {
         val response = authApi.signup(request)
-        Log.d("login",response.message())
-        return if(response.isSuccessful && response.body() != null){
+        Log.d("login", response.message())
+        return if (response.isSuccessful && response.body() != null) {
             Result.success(response.body()!!)
-        }else{
+        } else {
             Result.failure(Exception(response.message()))
         }
     }
-    suspend fun refreshToken(request: RefreshTokenRequest): Result<RefreshTokenResponse>{
+
+    suspend fun refreshToken(request: RefreshTokenRequest): Result<RefreshTokenResponse> {
         val response = authApi.refresh(request)
-        return if (response.isSuccessful && response.body() != null){
+        return if (response.isSuccessful && response.body() != null) {
             val body = response.body()!!
             authPrefs.saveAuthData(
                 accessToken = body.accessToken,
                 refreshToken = body.refreshToken,
-                userId = authPrefs.getUserId()?:"",
-                username = authPrefs.getUsername()?:"",
-                email = authPrefs.getEmail()?:"",
-                role = authPrefs.getRole()?:"",
+                userId = authPrefs.getUserId() ?: "",
+                username = authPrefs.getUsername() ?: "",
+                email = authPrefs.getEmail() ?: "",
+                role = authPrefs.getRole() ?: "",
                 isNewUser = false
             )
             Result.success(body)
-        }else{
+        } else {
             Result.failure(Exception(response.message()))
         }
     }

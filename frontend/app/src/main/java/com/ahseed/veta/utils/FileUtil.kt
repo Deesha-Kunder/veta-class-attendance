@@ -12,7 +12,8 @@ import androidx.documentfile.provider.DocumentFile
 object FileUtil {
     fun uriToMultiPart(context: Context, uri: Uri): MultipartBody.Part {
         val inputStream = context.contentResolver.openInputStream(uri)
-        val file = File(context.cacheDir, "upload_${System.currentTimeMillis()}.pdf")
+        val originalFileName = getFileNameFromUri(context, uri)
+        val file = File(context.cacheDir, originalFileName)
         inputStream?.use { input ->
             FileOutputStream(file).use { output ->
                 input.copyTo(output)

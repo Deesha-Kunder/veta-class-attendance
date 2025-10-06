@@ -16,7 +16,7 @@ import javax.inject.Singleton
 object NetworkModule {
     @Provides
     @Singleton
-    fun provideOkhttpClient(interceptor: Interceptor): OkHttpClient {
+    fun provideOkhttpClient(interceptor: AuthInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(interceptor)
             .build()
@@ -28,6 +28,7 @@ object NetworkModule {
         return Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/")
 //            .baseUrl("http://192.168.124.144:8080/")
+//            .baseUrl("172.10.1.124")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

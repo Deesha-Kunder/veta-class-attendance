@@ -16,8 +16,8 @@ fun AppNavHost(
         navController = navController,
         startDestination = startDestination
     ) {
-        composable("admin_main") { AdminMainScreen() }
-        composable("student_main") { UserMainScreen() }
+        composable("admin_main") { AdminMainScreen(parentNavController= navController) }
+        composable("student_main") { UserMainScreen(parentNavController = navController) }
         composable("login") { LoginScreen(navController = navController) }
         composable("signup") { SignUpScreen(navController = navController) }
 

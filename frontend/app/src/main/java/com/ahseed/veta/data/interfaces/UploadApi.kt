@@ -4,6 +4,8 @@ import com.ahseed.veta.data.modelclass.MaterialItem
 import com.ahseed.veta.data.modelclass.SignedUrlResponse
 import com.ahseed.veta.data.modelclass.UploadedResponse
 import okhttp3.MultipartBody
+import okhttp3.OkHttp
+import okhttp3.RequestBody
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -15,7 +17,7 @@ interface UploadApi {
     @POST("api/admin/materials/upload")
     suspend fun uploadPdf(
         @Part file: MultipartBody.Part,
-        @Part("uploaded_by") uploadedBy: String
+        @Part("uploaded_by") uploadedBy: RequestBody
     ): UploadedResponse
 
     @GET("api/admin/{admin_id}/materials")

@@ -2,7 +2,6 @@ package com.ahseed.veta.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -12,7 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -24,7 +24,9 @@ import com.ahseed.veta.screen.student.screen.profile.ProfileScreen
 import com.ahseed.veta.ui.theme.Purple80
 
 @Composable
-fun UserMainScreen() {
+fun UserMainScreen(
+    parentNavController: NavHostController
+) {
     val navController = rememberNavController()
     val items = listOf(
         BottomNavItem.Material,
@@ -69,15 +71,10 @@ fun UserMainScreen() {
             startDestination = BottomNavItem.Material.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-          composable(route = BottomNavItem.Material.route) { MaterialScreen(/*navController*/) }
+            composable(route = BottomNavItem.Material.route) { MaterialScreen(/*navController*/) }
             composable(route = BottomNavItem.Attendance.route) { AttendanceScreen() }
             composable(route = BottomNavItem.Report.route) { ReportScreen() }
             composable(route = BottomNavItem.Profile.route) { ProfileScreen() }
         }
     }
-}
-@Preview(showBackground = true)
-@Composable
-fun MainPreview(){
-    UserMainScreen()
 }

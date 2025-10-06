@@ -28,14 +28,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.ahseed.veta.screen.auth.AuthViewmodel
 import com.ahseed.veta.screen.student.modelClass.AdminProfile
-import com.ahseed.veta.screen.student.screen.profile.Profile
 import com.ahseed.veta.ui.theme.Purple80
 
 @Composable
-fun AdminProfileScreen(){
+fun AdminProfileScreen(
+    viewModel: AuthViewmodel = hiltViewModel(),
+    navController: NavController
+) {
     val profile = AdminProfile(
         id = "12345",
         name = "Ethan Bennett",
@@ -43,19 +47,33 @@ fun AdminProfileScreen(){
         email = "ethan.bennett@email.com",
         profileUrl = "",
     )
-    Profile(profile)
+    Profile(profile, onclick = { viewModel.logout() }, onButtonClick = {
+        navController.navigate("login"){
+            popUpTo("admin_main"){
+                inclusive = true
+            }
+        }
+    })
 }
+
 @Composable
-fun Profile( profile: AdminProfile
-){
+fun Profile(
+    profile: AdminProfile,
+    onclick: () -> Unit,
+    onButtonClick:() -> Unit
+) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(10.dp),
-    ){
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp),
+    ) {
         Row(
-            modifier = Modifier.fillMaxWidth().size(56.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .size(56.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
-        ){
+        ) {
             IconButton(onClick = {}) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBackIosNew,
@@ -73,11 +91,12 @@ fun Profile( profile: AdminProfile
                 )
             }
         }
-        Column (
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(18.dp),
             horizontalAlignment = Alignment.CenterHorizontally
-        ){
+        ) {
             Icon(
                 imageVector = Icons.Default.Person,
                 contentDescription = "Profile pic",
@@ -99,15 +118,23 @@ fun Profile( profile: AdminProfile
                 )
         }
         Spacer(modifier = Modifier.height(20.dp))
-        Text(text = "Details", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-            , modifier = Modifier.padding(8.dp))
+        Text(
+            text = "Details",
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier.padding(8.dp)
+        )
         ProfileDetailRow(label = "Phone Number", value = profile.phoneNumber)
         ProfileDetailRow(label = "Email ID", value = profile.email)
 
         Spacer(modifier = Modifier.weight(1f))
         Button(
-            onClick = {},
-            modifier =Modifier
+            onClick = {
+               onclick()
+                onButtonClick()
+
+
+            },
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
             shape = MaterialTheme.shapes.large,
@@ -117,17 +144,18 @@ fun Profile( profile: AdminProfile
         ) {
             Text(
                 text = "Logout",
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
             )
         }
     }
 
 }
+
 @Composable
 fun ProfileDetailRow(label: String, value: String) {
-    Column (
+    Column(
         modifier = Modifier.padding(8.dp),
-    ){
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -146,9 +174,4 @@ fun ProfileDetailRow(label: String, value: String) {
         }
         HorizontalDivider(color = Color.LightGray, thickness = 2.dp)
     }
-}
-@Preview(showBackground = true)
-@Composable
-fun previewww(){
-    AdminProfileScreen()
 }

@@ -42,6 +42,7 @@ import androidx.navigation.NavController
 import com.ahseed.veta.data.modelclass.MaterialItem
 import com.ahseed.veta.ui.theme.primary
 import androidx.core.net.toUri
+import com.ahseed.veta.utils.getTimeAgo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,9 +74,7 @@ fun UploadedFileScreen(
         })
         Column(
             modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
+            horizontalAlignment = Alignment.CenterHorizontally) {
             when (fileState) {
                 is FileState.Idle -> Text("No files yet")
                 is FileState.Loading -> Text("Loading files")
@@ -126,11 +125,12 @@ fun MaterialRow(
         Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = material.fileName,
+                text = material.filename,
                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
             )
+            Spacer(modifier = Modifier.height(5.dp))
             Text(
-                text = material.createdAt,
+                text = getTimeAgo(material.addedAt),
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.DarkGray
             )
@@ -138,7 +138,6 @@ fun MaterialRow(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MaterialTopBar(onBackClick: () -> Unit) {
     Box(
@@ -149,7 +148,7 @@ fun MaterialTopBar(onBackClick: () -> Unit) {
     ) {
         IconButton(
             onClick = {
-                onBackClick
+                onBackClick()
             },
             modifier = Modifier.align(Alignment.CenterStart)
         ) {
