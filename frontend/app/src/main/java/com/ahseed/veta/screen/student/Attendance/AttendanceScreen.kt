@@ -1,6 +1,5 @@
-package com.ahseed.veta.screen.student.screen
+package com.ahseed.veta.screen.student.Attendance
 
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,85 +30,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.ahseed.veta.ui.theme.primary
 
 @Composable
-fun AttendanceScreen() {
-    RegisterScreen()
-}
-
-@Composable
-fun RegisterScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            IconButton(
-                onClick = {},
-                modifier = Modifier.align(Alignment.CenterStart)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBackIosNew,
-                    contentDescription = "back"
-                )
-            }
-            Text(
-                text = "Attendance",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                textAlign = TextAlign.Center
-            )
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f)
-                .clip(RoundedCornerShape(10.dp))
-                .background(color = Color.LightGray),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.CameraAlt,
-                contentDescription = "camera",
-                modifier = Modifier.size(70.dp)
-            )
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Position your face within the frame and ensure good lighting for accurate recognition.",
-            style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(16.dp)
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        Button(
-            onClick = {},
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
-            shape = RoundedCornerShape(15.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = primary)
-        )
-        {
-            Text(
-                text = "Register face",
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-    }
-}
-
-@Composable
-fun MarkAttendance() {
+fun MarkAttendance(
+    navController : NavController
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -124,7 +52,9 @@ fun MarkAttendance() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(
-                onClick = {}
+                onClick = {
+                    navController.popBackStack()
+                }
             ) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBackIosNew,
@@ -137,7 +67,9 @@ fun MarkAttendance() {
                 textAlign = TextAlign.Center
             )
             IconButton(
-                onClick = {}
+                onClick = {
+                    navController.navigate("registerFaceScreen")
+                }
             ) {
                 Icon(
                     imageVector = Icons.Filled.PersonAdd,
@@ -182,10 +114,4 @@ fun MarkAttendance() {
             )
         }
     }
-}
-
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun preview() {
-    MarkAttendance()
 }

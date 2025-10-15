@@ -39,6 +39,9 @@ android {
     buildFeatures {
         compose = true
     }
+    androidResources {
+        noCompress += "tflite"
+    }
 }
 
 dependencies {
@@ -69,6 +72,21 @@ dependencies {
     implementation(libs.converter.gson)
 
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation("androidx.documentfile:documentfile:1.1.0")
+    implementation(libs.androidx.documentfile)
+
+    implementation(libs.face.detection)
+    implementation(libs.logging.interceptor)
+    implementation(libs.okhttp)
+
+    val cameraxVersion = "1.3.0"
+    implementation("androidx.camera:camera-core:$cameraxVersion")
+    implementation("androidx.camera:camera-camera2:$cameraxVersion")
+    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+    implementation("androidx.camera:camera-view:$cameraxVersion")
+
+    implementation("org.tensorflow:tensorflow-lite:2.14.0")
+    implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
+
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
 
 }

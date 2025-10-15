@@ -30,34 +30,55 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.ahseed.veta.screen.auth.AuthViewmodel
 import com.ahseed.veta.screen.student.modelClass.StudentProfile
 import com.ahseed.veta.ui.theme.Purple80
 
 @Composable
-fun ProfileScreen(){
+fun ProfileScreen(
+    viewmodel: AuthViewmodel = hiltViewModel(),
+    navController: NavController
+) {
     val profile = StudentProfile(
         id = "12345",
         name = "Ethan Bennett",
         phoneNumber = "(555) 123-4567",
         email = "ethan.bennett@email.com",
         profession = "Student",
-        profileUrl="",
+        profileUrl = "",
         joinedDate = "August 15, 2022",
         courseHours = 120
     )
-    Profile(profile)
+    Profile(
+        profile = profile, onClick = {
+            viewmodel.logout()
+        },
+        onBackClick ={ navController.popBackStack()}
+
+    )
+
 }
+
 @Composable
-fun Profile( profile: StudentProfile
-    ){
+fun Profile(
+    profile: StudentProfile,
+    onClick: () -> Unit,
+    onBackClick: () -> Unit
+) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(10.dp),
-    ){
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp),
+    ) {
         Row(
-            modifier = Modifier.fillMaxWidth().size(56.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .size(56.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
-        ){
+        ) {
             IconButton(onClick = {}) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBackIosNew,
@@ -68,18 +89,21 @@ fun Profile( profile: StudentProfile
                 text = "Profile",
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
             )
-            IconButton(onClick = {}) {
+            IconButton(onClick = {
+                onBackClick()
+            }) {
                 Icon(
                     imageVector = Icons.Filled.Edit,
                     contentDescription = "back"
                 )
             }
         }
-        Column (
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(18.dp),
             horizontalAlignment = Alignment.CenterHorizontally
-        ){
+        ) {
             Icon(
                 imageVector = Icons.Default.Person,
                 contentDescription = "Profile pic",
@@ -98,11 +122,14 @@ fun Profile( profile: StudentProfile
                 text = "ID:99999",
                 style = MaterialTheme.typography.labelLarge,
 
-            )
+                )
         }
         Spacer(modifier = Modifier.height(20.dp))
-        Text(text = "Details", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-        , modifier = Modifier.padding(8.dp))
+        Text(
+            text = "Details",
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier.padding(8.dp)
+        )
         ProfileDetailRow(label = "Phone Number", value = profile.phoneNumber)
         ProfileDetailRow(label = "Email ID", value = profile.email)
         ProfileDetailRow(label = "Profession", value = profile.profession)
@@ -111,8 +138,10 @@ fun Profile( profile: StudentProfile
 
         Spacer(modifier = Modifier.weight(1f))
         Button(
-            onClick = {},
-            modifier =Modifier
+            onClick = {
+                onClick()
+            },
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
             shape = MaterialTheme.shapes.large,
@@ -127,11 +156,12 @@ fun Profile( profile: StudentProfile
         }
     }
 }
+
 @Composable
 fun ProfileDetailRow(label: String, value: String) {
-    Column (
+    Column(
         modifier = Modifier.padding(8.dp),
-    ){
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -150,9 +180,4 @@ fun ProfileDetailRow(label: String, value: String) {
         }
         HorizontalDivider(color = Color.LightGray, thickness = 2.dp)
     }
-}
-@Preview(showBackground = true)
-@Composable
-fun previewww(){
-    ProfileScreen()
 }

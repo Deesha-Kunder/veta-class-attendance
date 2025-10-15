@@ -80,7 +80,7 @@ class UploadViewmodel @Inject constructor(
 
     fun viewFile(fileId: String) {
         viewModelScope.launch {
-            val response = repository.getFileByFileIdFromAdminPage(fileId)
+            val response = repository.getFileByFileFromIdFromAdminPage(fileId)
             response.fold(
                 onSuccess = { _selectedUrl.value = it.url },
                 onFailure = { _selectedUrl.value = null }

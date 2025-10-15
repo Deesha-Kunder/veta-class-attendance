@@ -5,7 +5,6 @@ import com.ahseed.veta.data.interfaces.UploadApi
 import com.ahseed.veta.data.modelclass.MaterialItem
 import com.ahseed.veta.data.modelclass.SignedUrlResponse
 import com.ahseed.veta.data.modelclass.UploadedResponse
-import com.ahseed.veta.screen.student.screen.RegisterScreen
 import com.google.gson.GsonBuilder
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -42,9 +41,26 @@ class UploadRepository @Inject constructor(
             Result.failure(e)
         }
     }
-    suspend fun getFileByFileIdFromAdminPage(fileId: String):Result<SignedUrlResponse>{
+    suspend fun getFileByFileFromIdFromAdminPage(fileId: String):Result<SignedUrlResponse>{
         return try{
             val response = api.getFileByFileIdFromAdminPage(fileId)
+            Result.success(response)
+        }catch (e:Exception){
+            Result.failure(e)
+        }
+    }
+    suspend fun getAllFiles():Result<List<MaterialItem>>{
+        return try{
+            val response = api.getAllFiles()
+            Log.d("getFilesFromStudent: ",gson.toJson(response))
+            Result.success(response)
+        }catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+    suspend fun getFileByFileFromID(fileId: String):Result<SignedUrlResponse>{
+        return try{
+            val response = api.getFileFromFileId(fileId)
             Result.success(response)
         }catch (e:Exception){
             Result.failure(e)

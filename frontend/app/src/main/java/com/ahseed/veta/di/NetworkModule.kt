@@ -1,5 +1,6 @@
 package com.ahseed.veta.di
 
+import android.util.Log
 import com.ahseed.veta.data.interfaces.AuthApi
 import com.ahseed.veta.data.interfaces.UploadApi
 import dagger.Module
@@ -7,6 +8,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -16,9 +18,19 @@ import javax.inject.Singleton
 object NetworkModule {
     @Provides
     @Singleton
-    fun provideOkhttpClient(interceptor: AuthInterceptor): OkHttpClient {
+    fun provideLoggingIntercept(): HttpLoggingInterceptor{
+        return HttpLoggingInterceptor{ message ->
+            Log.d("HTTP CLIENT:",message)
+        }.apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+    }
+    @Provides
+    @Singleton
+    fun provideOkhttpClient(interceptor: AuthInterceptor, loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(interceptor)
+            .addInterceptor(loggingInterceptor)
             .build()
     }
 

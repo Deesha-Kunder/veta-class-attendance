@@ -11,14 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.ahseed.veta.screen.student.screen.AttendanceScreen
-import com.ahseed.veta.screen.student.screen.MaterialScreen
+import com.ahseed.veta.screen.student.Attendance.MarkAttendance
+import com.ahseed.veta.screen.student.Attendance.RegisterFaceScreen
+import com.ahseed.veta.screen.student.materialScreen.MaterialScreen
 import com.ahseed.veta.screen.student.screen.ReportScreen
 import com.ahseed.veta.screen.student.screen.profile.ProfileScreen
 import com.ahseed.veta.ui.theme.Purple80
@@ -71,10 +71,16 @@ fun UserMainScreen(
             startDestination = BottomNavItem.Material.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(route = BottomNavItem.Material.route) { MaterialScreen(/*navController*/) }
-            composable(route = BottomNavItem.Attendance.route) { AttendanceScreen() }
+            composable(route = BottomNavItem.Material.route) { MaterialScreen(
+                navController= navController
+            ) }
+            composable(route = BottomNavItem.Attendance.route) { MarkAttendance(navController = navController) }
             composable(route = BottomNavItem.Report.route) { ReportScreen() }
-            composable(route = BottomNavItem.Profile.route) { ProfileScreen() }
+            composable(route = BottomNavItem.Profile.route) { ProfileScreen(navController= navController) }
+
+            composable("registerFaceScreen"){
+                RegisterFaceScreen(navController = navController)
+            }
         }
     }
 }

@@ -22,11 +22,19 @@ interface UploadApi {
 
     @GET("api/admin/{admin_id}/materials")
     suspend fun getFilesUploadedByAdmin(
-        @Path("admin_id") adminId:String
-    ):List<MaterialItem>
+        @Path("admin_id") adminId: String
+    ): List<MaterialItem>
 
     @GET("api/admin/materials/{file_id}")
     suspend fun getFileByFileIdFromAdminPage(
+        @Path("file_id") fileId: String
+    ): SignedUrlResponse
+
+    @GET("api/student/materials")
+    suspend fun getAllFiles(): List<MaterialItem>
+
+    @GET("api/student/materials/{file_id}")
+    suspend fun getFileFromFileId(
         @Path("file_id") fileId:String
     ): SignedUrlResponse
 
