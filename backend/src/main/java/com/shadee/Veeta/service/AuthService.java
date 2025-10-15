@@ -3,6 +3,7 @@ package com.shadee.Veeta.service;
 import com.shadee.Veeta.dto.*;
 import com.shadee.Veeta.modelclass.Role;
 import com.shadee.Veeta.modelclass.Users;
+import com.shadee.Veeta.repository.StudentRegisterRepository;
 import com.shadee.Veeta.repository.UserRepository;
 import com.shadee.Veeta.security.CustomUserDetails;
 import com.shadee.Veeta.utils.JwtUtils;
@@ -32,6 +33,9 @@ public class AuthService {
     @Autowired
     CustomUserDetailsService userDetailsService;
 
+    @Autowired
+    StudentRegisterRepository studentRegisterRepository;
+
     public ResponseEntity<LoginResponse> login(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -50,6 +54,7 @@ public class AuthService {
                 userDetails.getEmail(),
                 Role.valueOf(userDetails.getAuthorities().iterator().next().getAuthority())
         );
+        System.out.println(userInfo);
         return ResponseEntity.ok(new LoginResponse(accessToken, refreshToken, userInfo));
     }
 
@@ -57,12 +62,20 @@ public class AuthService {
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new SignUpResponse("email already exist",null));
         }
+
+        if("STUDENT".equalsIgnoreCase(String.valueOf(signUpRequest.getRole()))){
+            boolean studentExists = studentRegisterRepository.existsByEmail(signUpRequest.getEmail());
+
+            if(!studentExists){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new SignUpResponse("Student email is not found in Student records",null));
+            }
+        }
         Users user = new Users();
         user.setUsername(signUpRequest.getUsername());
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(encoder.encode(signUpRequest.getPassword()));
         user.setRole(signUpRequest.getRole());
-
 
 
         Users savedUser = userRepository.save(user);
@@ -73,6 +86,7 @@ public class AuthService {
                 savedUser.getEmail(),
                 savedUser.getRole()
         );
+        System.out.println(userInfo);
         return ResponseEntity.ok(new SignUpResponse("Registered Successfully",userInfo));
 
     }
