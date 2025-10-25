@@ -2,7 +2,12 @@ package com.ahseed.veta.di
 
 import android.util.Log
 import com.ahseed.veta.data.interfaces.AuthApi
+import com.ahseed.veta.data.interfaces.RefreshApi
 import com.ahseed.veta.data.interfaces.UploadApi
+import com.ahseed.veta.data.repository.TokenAuthenticator
+import com.ahseed.veta.sharedpreferences.AuthPrefs
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,38 +16,54 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
     @Provides
     @Singleton
-    fun provideLoggingIntercept(): HttpLoggingInterceptor{
-        return HttpLoggingInterceptor{ message ->
-            Log.d("HTTP CLIENT:",message)
-        }.apply {
+    fun provideGson(): Gson = GsonBuilder().create()
+
+    @Provides
+    @Singleton
+    fun provideOkhttpClient(
+        refreshApi: RefreshApi,
+        authPrefs: AuthPrefs
+    ): OkHttpClient {
+        val logging = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
-    }
-    @Provides
-    @Singleton
-    fun provideOkhttpClient(interceptor: AuthInterceptor, loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(interceptor)
-            .addInterceptor(loggingInterceptor)
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+            .addInterceptor(logging)
+            .addInterceptor { chain ->
+                val requestBuilder = chain.request().newBuilder()
+                authPrefs.getAccessToken().let { token->
+                    Log.d("AuthDebug","sending Token Bearer $token")
+                    requestBuilder.addHeader("Authorization","Bearer $token")
+                }
+                chain.proceed(requestBuilder.build())
+            }
+            .authenticator(TokenAuthenticator(authPrefs, refreshApi))
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/")
 //            .baseUrl("http://192.168.124.144:8080/")
 //            .baseUrl("172.10.1.124")
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 

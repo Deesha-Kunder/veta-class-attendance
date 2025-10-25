@@ -6,6 +6,8 @@ import androidx.core.content.edit
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @Singleton
 class AuthPrefs @Inject constructor(
@@ -13,6 +15,9 @@ class AuthPrefs @Inject constructor(
 ) {
     private val prefs: SharedPreferences =
         context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+
+    private val _isLoggedIn = MutableStateFlow(!getAccessToken().isNullOrEmpty())
+    val isLoggedIn : StateFlow<Boolean> = _isLoggedIn
 
     fun saveAuthData(
         accessToken: String,
@@ -34,6 +39,7 @@ class AuthPrefs @Inject constructor(
             putString("role",role)
             putBoolean("isNewUser", isNewUser)
             apply()
+            _isLoggedIn.value = true
         }
     }
 
@@ -48,6 +54,7 @@ class AuthPrefs @Inject constructor(
 
     fun clearAuthData() {
         prefs.edit { clear() }
+        _isLoggedIn.value = false
     }
 
 }

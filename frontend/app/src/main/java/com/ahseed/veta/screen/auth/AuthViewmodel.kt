@@ -12,12 +12,12 @@ import com.ahseed.veta.utils.ValidationUtil
 import com.ahseed.veta.utils.getMessage
 import com.ahseed.veta.utils.isValid
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewmodel @Inject constructor(

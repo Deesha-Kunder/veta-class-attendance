@@ -17,6 +17,4 @@ interface AuthApi {
     @POST("api/auth/signup")
     suspend fun signup(@Body signUpRequest: SignUpRequest): Response<SignUpResponse>
 
-    @POST("api/auth/refresh")
-    suspend fun refresh(@Body refreshTokenRequest: RefreshTokenRequest): Response<RefreshTokenResponse>
 }
