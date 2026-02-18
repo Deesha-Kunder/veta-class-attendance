@@ -55,7 +55,7 @@ public class SecurityConfig {
                 .exceptionHandling(exception ->exception.authenticationEntryPoint(authEntryPointJwt))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/signup","/api/auth/login" ).permitAll()
+                .requestMatchers("/api/auth/signup","/api/auth/login","/api/auth/refresh" ).permitAll()
                 .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                 .requestMatchers("/api/student/**").hasAuthority("STUDENT")
                 .anyRequest().authenticated());

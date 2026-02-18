@@ -1,7 +1,5 @@
 package com.ahseed.veta.screen.admin
 
-import android.widget.Button
-import android.widget.DatePicker
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.HowToReg
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -52,7 +51,10 @@ fun RegisterStudentScreen() {
     var showDatePicker by remember{mutableStateOf(false)}
     var selectedDate by remember{mutableStateOf("")}
 
-    var datePickerState = rememberDatePickerState()
+    val todayMillis = Calendar.getInstance().timeInMillis
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = todayMillis
+    )
 
 
 
@@ -134,7 +136,13 @@ fun RegisterStudentScreen() {
                 label = {Text(text = "Joined Date")},
                 modifier = Modifier.fillMaxWidth()
                     .clickable{showDatePicker = true},
-                //enabled = true
+                enabled = false,
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.DateRange,
+                        contentDescription = "DatePicker"
+                    )
+                }
             )
             if (showDatePicker) {
                 DatePickerDialog(

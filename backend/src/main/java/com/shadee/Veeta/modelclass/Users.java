@@ -26,7 +26,7 @@ public class Users {
     @Column(name = "user_id", updatable = false, nullable = false)
     private String userId;
 
-    @NotBlank(message = "user can't ne empty")
+    @NotBlank(message = "user can't be empty")
     @Size(min = 3, max = 20)
     @Pattern(regexp = "^[a-zA-Z0-9_]+$")
     private String username;
@@ -42,4 +42,8 @@ public class Users {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToOne(optional = true)
+    @JoinColumn(name = "student_id",nullable = true)
+    private Student student;
 }

@@ -2,6 +2,7 @@ package com.shadee.Veeta.service;
 
 import com.shadee.Veeta.dto.*;
 import com.shadee.Veeta.modelclass.Role;
+import com.shadee.Veeta.modelclass.Student;
 import com.shadee.Veeta.modelclass.Users;
 import com.shadee.Veeta.repository.StudentRegisterRepository;
 import com.shadee.Veeta.repository.UserRepository;
@@ -16,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -60,16 +63,8 @@ public class AuthService {
 
     public ResponseEntity<SignUpResponse> signUp(SignUpRequest signUpRequest) {
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new SignUpResponse("email already exist",null));
-        }
-
-        if("STUDENT".equalsIgnoreCase(String.valueOf(signUpRequest.getRole()))){
-            boolean studentExists = studentRegisterRepository.existsByEmail(signUpRequest.getEmail());
-
-            if(!studentExists){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new SignUpResponse("Student email is not found in Student records",null));
-            }
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new SignUpResponse("email already exist",null));
         }
         Users user = new Users();
         user.setUsername(signUpRequest.getUsername());
@@ -77,7 +72,16 @@ public class AuthService {
         user.setPassword(encoder.encode(signUpRequest.getPassword()));
         user.setRole(signUpRequest.getRole());
 
+        if("STUDENT".equalsIgnoreCase(signUpRequest.getRole().name())){
+            Optional<Student> student = studentRegisterRepository.findByEmail(signUpRequest.getEmail());
 
+            if(student.isEmpty()){
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(new SignUpResponse("Student email is not found in Student records",null));
+            }
+            user.setStudent(student.get());
+        }
         Users savedUser = userRepository.save(user);
 
         UserInfo userInfo = new UserInfo(

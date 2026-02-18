@@ -28,7 +28,7 @@ public class StudentRegisterController {
             Map<String,Object> response = new HashMap<>();
             response.put("success",true);
             response.put("message","Student registered successfully");
-            response.put("data",student);
+            response.put("user_data",student);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         }catch (Exception e){

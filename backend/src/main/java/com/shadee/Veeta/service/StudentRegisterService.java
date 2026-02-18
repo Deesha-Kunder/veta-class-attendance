@@ -34,4 +34,7 @@ public class StudentRegisterService {
     public Student findStudentByEmail(String email) {
         return repository.findByEmail(email).orElseThrow(() -> new RuntimeException("Student not found"));
     }
+    public Student getStudentDataById(Long id){
+        return repository.findById(id).orElseThrow(()-> new RuntimeException("User not found"));
+    }
 }
