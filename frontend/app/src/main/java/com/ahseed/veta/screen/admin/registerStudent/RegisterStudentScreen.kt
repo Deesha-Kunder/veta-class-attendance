@@ -1,5 +1,6 @@
-package com.ahseed.veta.screen.admin
+package com.ahseed.veta.screen.admin.registerStudent
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -35,13 +35,24 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.ahseed.veta.data.modelclass.RegisterStudent
 import com.ahseed.veta.ui.theme.Purple80
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterStudentScreen() {
+fun RegisterStudentScreen(
+    viewModel: RegisterStudentViewModel = hiltViewModel()
+) {
+    val context = LocalContext.current
+
     var studentName by remember { mutableStateOf("") }
     var studentEmail by remember { mutableStateOf("") }
     var batch by remember { mutableStateOf("") }
@@ -56,7 +67,11 @@ fun RegisterStudentScreen() {
         initialSelectedDateMillis = todayMillis
     )
 
-
+    LaunchedEffect(Unit) {
+        viewModel.uiMessage.collect { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -90,7 +105,8 @@ fun RegisterStudentScreen() {
             }
         }
         Column (
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
@@ -134,8 +150,9 @@ fun RegisterStudentScreen() {
                 value = selectedDate,
                 onValueChange = {},
                 label = {Text(text = "Joined Date")},
-                modifier = Modifier.fillMaxWidth()
-                    .clickable{showDatePicker = true},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showDatePicker = true },
                 enabled = false,
                 trailingIcon = {
                     Icon(
@@ -151,15 +168,9 @@ fun RegisterStudentScreen() {
                         TextButton(
                             onClick = {
                                 showDatePicker = false
-                                datePickerState.selectedDateMillis?.let {
-                                    val calendar = Calendar.getInstance().apply {
-                                        timeInMillis = it
-
-                                    }
-                                    val day = calendar.get(Calendar.DAY_OF_MONTH)
-                                    val month = calendar.get(Calendar.MONTH) + 1
-                                    val year = calendar.get(Calendar.YEAR)
-                                    selectedDate = "$day/$month/$year"
+                                datePickerState.selectedDateMillis?.let { millis->
+                                    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+                                    selectedDate = formatter.format(millis)
                                 }
                             }
                         ) {
@@ -174,8 +185,20 @@ fun RegisterStudentScreen() {
             }
             Spacer(modifier = Modifier.weight(1f))
             Button(
-                onClick = {},
-                modifier = Modifier.fillMaxWidth().height(56.dp),
+                onClick = {
+                    val request = RegisterStudent(
+                        name = studentName,
+                        email = studentEmail,
+                        profession = profession,
+                        courseHours = courseHour.toIntOrNull()?:0,
+                        batch = batch,
+                        joinedDate = selectedDate
+                    )
+                    viewModel.registerStudent(request)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
                 shape = MaterialTheme.shapes.large,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Purple80
@@ -187,10 +210,4 @@ fun RegisterStudentScreen() {
         }
 
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewRegister() {
-    RegisterStudentScreen()
 }
