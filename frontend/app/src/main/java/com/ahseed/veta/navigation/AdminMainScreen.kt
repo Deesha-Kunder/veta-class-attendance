@@ -20,9 +20,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ahseed.veta.screen.admin.AdminProfileScreen
 import com.ahseed.veta.screen.admin.RecordsScreen
-import com.ahseed.veta.screen.admin.RegisterStudentScreen
+//import com.ahseed.veta.screen.admin.RegisterStudentScreen
 import com.ahseed.veta.screen.admin.announcementscreen.AnnouncementScreen
 import com.ahseed.veta.screen.admin.announcementscreen.UploadedFileScreen
+import com.ahseed.veta.screen.admin.registerStudent.RegisterStudentScreen
 import com.ahseed.veta.ui.theme.Purple40
 import com.ahseed.veta.ui.theme.Purple80
 

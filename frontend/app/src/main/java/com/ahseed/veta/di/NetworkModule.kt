@@ -2,6 +2,7 @@ package com.ahseed.veta.di
 
 import android.util.Log
 import com.ahseed.veta.data.interfaces.AuthApi
+import com.ahseed.veta.data.interfaces.OnboardingApi
 import com.ahseed.veta.data.interfaces.RefreshApi
 import com.ahseed.veta.data.interfaces.UploadApi
 import com.ahseed.veta.data.repository.TokenAuthenticator
@@ -77,6 +78,12 @@ object NetworkModule {
     @Singleton
     fun provideUpload(retrofit: Retrofit): UploadApi {
         return retrofit.create(UploadApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOnboarding(retrofit: Retrofit): OnboardingApi{
+        return retrofit.create(OnboardingApi::class.java)
     }
 
 }
