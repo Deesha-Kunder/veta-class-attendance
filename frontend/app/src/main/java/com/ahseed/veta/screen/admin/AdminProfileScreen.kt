@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ahseed.veta.screen.auth.AuthViewmodel
-import com.ahseed.veta.screen.student.modelClass.AdminProfile
+import com.ahseed.veta.data.modelclass.AdminProfile
 import com.ahseed.veta.ui.theme.Purple80
 
 @Composable

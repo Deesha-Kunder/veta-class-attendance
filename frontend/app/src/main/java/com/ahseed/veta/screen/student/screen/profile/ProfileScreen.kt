@@ -28,12 +28,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ahseed.veta.screen.auth.AuthViewmodel
-import com.ahseed.veta.screen.student.modelClass.StudentProfile
+import com.ahseed.veta.data.modelclass.StudentProfile
 import com.ahseed.veta.ui.theme.Purple80
 
 @Composable

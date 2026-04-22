@@ -3,7 +3,7 @@ package com.ahseed.veta.screen.student.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ahseed.veta.data.modelclass.MaterialItem
-import com.ahseed.veta.screen.student.repository.Repository
+import com.ahseed.veta.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

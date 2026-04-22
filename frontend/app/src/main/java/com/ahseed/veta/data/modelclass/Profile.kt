@@ -1,4 +1,4 @@
-package com.ahseed.veta.screen.student.modelClass
+package com.ahseed.veta.data.modelclass
 
 data class StudentProfile(
     val id:String,
