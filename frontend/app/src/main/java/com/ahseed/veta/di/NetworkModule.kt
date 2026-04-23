@@ -2,8 +2,10 @@ package com.ahseed.veta.di
 
 import android.util.Log
 import com.ahseed.veta.data.interfaces.AuthApi
+import com.ahseed.veta.data.interfaces.FaceApi
 import com.ahseed.veta.data.interfaces.OnboardingApi
 import com.ahseed.veta.data.interfaces.RefreshApi
+import com.ahseed.veta.data.interfaces.RegisterStudentApi
 import com.ahseed.veta.data.interfaces.UploadApi
 import com.ahseed.veta.data.repository.TokenAuthenticator
 import com.ahseed.veta.sharedpreferences.AuthPrefs
@@ -84,6 +86,18 @@ object NetworkModule {
     @Singleton
     fun provideOnboarding(retrofit: Retrofit): OnboardingApi{
         return retrofit.create(OnboardingApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFace(retrofit: Retrofit): FaceApi{
+        return retrofit.create(FaceApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRegisterStudent(retrofit: Retrofit): RegisterStudentApi{
+        return retrofit.create(RegisterStudentApi::class.java)
     }
 
 }
