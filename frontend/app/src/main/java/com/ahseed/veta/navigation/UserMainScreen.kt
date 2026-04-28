@@ -18,10 +18,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ahseed.veta.screen.student.Attendance.MarkAttendance
 import com.ahseed.veta.screen.student.Attendance.RegisterFaceScreen
-//import com.ahseed.veta.screen.student.Attendance.RegisterFaceScreen
 import com.ahseed.veta.screen.student.materialScreen.MaterialScreen
+import com.ahseed.veta.screen.student.profile.ProfileScreen
 import com.ahseed.veta.screen.student.screen.ReportScreen
-import com.ahseed.veta.screen.student.screen.profile.ProfileScreen
 import com.ahseed.veta.ui.theme.Purple80
 
 @Composable

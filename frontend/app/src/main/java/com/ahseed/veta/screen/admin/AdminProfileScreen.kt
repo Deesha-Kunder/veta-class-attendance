@@ -23,6 +23,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,36 +35,19 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ahseed.veta.screen.auth.AuthViewmodel
-import com.ahseed.veta.data.modelclass.AdminProfile
+import com.ahseed.veta.screen.student.profile.ProfileViewModel
 import com.ahseed.veta.ui.theme.Purple80
 
 @Composable
 fun AdminProfileScreen(
     viewModel: AuthViewmodel = hiltViewModel(),
+    profileViewModel: ProfileViewModel = hiltViewModel(),
     navController: NavController
 ) {
-    val profile = AdminProfile(
-        id = "12345",
-        name = "Ethan Bennett",
-        phoneNumber = "(555) 123-4567",
-        email = "ethan.bennett@email.com",
-        profileUrl = "",
-    )
-    Profile(profile, onclick = { viewModel.logout() }, onButtonClick = {
-        navController.navigate("login"){
-            popUpTo("admin_main"){
-                inclusive = true
-            }
-        }
-    })
-}
-
-@Composable
-fun Profile(
-    profile: AdminProfile,
-    onclick: () -> Unit,
-    onButtonClick:() -> Unit
-) {
+    LaunchedEffect(Unit) {
+        profileViewModel.getAdminProfileInfo()
+    }
+    val adminProfile by profileViewModel.adminProfile.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -107,12 +93,12 @@ fun Profile(
                 tint = Color.DarkGray
             )
             Text(
-                text = "deesha",
+                text = adminProfile?.username?:"unknown",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(5.dp)
             )
             Text(
-                text = "ID:99999",
+                text = adminProfile?.role?:"unknown",
                 style = MaterialTheme.typography.labelLarge,
 
                 )
@@ -123,16 +109,17 @@ fun Profile(
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(8.dp)
         )
-        ProfileDetailRow(label = "Phone Number", value = profile.phoneNumber)
-        ProfileDetailRow(label = "Email ID", value = profile.email)
+        ProfileDetailRow(label = "Email ID", value = adminProfile?.email?:"unknown")
 
         Spacer(modifier = Modifier.weight(1f))
         Button(
             onClick = {
-               onclick()
-                onButtonClick()
-
-
+                viewModel.logout()
+                navController.navigate("login"){
+                    popUpTo("admin_main"){
+                        inclusive = true
+                    }
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()

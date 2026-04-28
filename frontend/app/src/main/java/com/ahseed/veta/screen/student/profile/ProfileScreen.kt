@@ -1,4 +1,4 @@
-package com.ahseed.veta.screen.student.screen.profile
+package com.ahseed.veta.screen.student.profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +23,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,40 +35,18 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ahseed.veta.screen.auth.AuthViewmodel
-import com.ahseed.veta.data.modelclass.StudentProfile
 import com.ahseed.veta.ui.theme.Purple80
 
 @Composable
-fun ProfileScreenn(
-    viewmodel: AuthViewmodel = hiltViewModel(),
+fun ProfileScreen(
+    viewModel: AuthViewmodel = hiltViewModel(),
+    profileViewModel: ProfileViewModel = hiltViewModel(),
     navController: NavController
 ) {
-    val profile = StudentProfile(
-        id = "12345",
-        name = "Ethan Bennett",
-        phoneNumber = "(555) 123-4567",
-        email = "ethan.bennett@email.com",
-        profession = "Student",
-        profileUrl = "",
-        joinedDate = "August 15, 2022",
-        courseHours = 120
-    )
-    Profile(
-        profile = profile, onClick = {
-            viewmodel.logout()
-        },
-        onBackClick ={ navController.popBackStack()}
-
-    )
-
-}
-
-@Composable
-fun Profile(
-    profile: StudentProfile,
-    onClick: () -> Unit,
-    onBackClick: () -> Unit
-) {
+    LaunchedEffect(Unit) {
+        profileViewModel.getStudentProfileInfo()
+    }
+    val studentProfile by profileViewModel.studentProfile.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -89,7 +70,7 @@ fun Profile(
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
             )
             IconButton(onClick = {
-                onBackClick()
+
             }) {
                 Icon(
                     imageVector = Icons.Filled.Edit,
@@ -113,12 +94,12 @@ fun Profile(
                 tint = Color.DarkGray
             )
             Text(
-                text = "deesha",
+                text = studentProfile?.name?:"unknown" ,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(5.dp)
             )
             Text(
-                text = "ID:99999",
+                text = "batch ${studentProfile?.batch}",
                 style = MaterialTheme.typography.labelLarge,
 
                 )
@@ -129,16 +110,20 @@ fun Profile(
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(8.dp)
         )
-        ProfileDetailRow(label = "Phone Number", value = profile.phoneNumber)
-        ProfileDetailRow(label = "Email ID", value = profile.email)
-        ProfileDetailRow(label = "Profession", value = profile.profession)
-        ProfileDetailRow(label = "Joined Date", value = profile.joinedDate)
-        ProfileDetailRow(label = "Allocated Course Hours", value = "${profile.courseHours} hours")
+        ProfileDetailRow(label = "Email ID", value = studentProfile?.email?:"unknown")
+        ProfileDetailRow(label = "Profession", value = studentProfile?.profession?:"unknown")
+        ProfileDetailRow(label = "Joined Date", value = studentProfile?.joinedDate?:"unknown")
+        ProfileDetailRow(label = "Allocated Course Hours", value = "${studentProfile?.courseHour} hours")
 
         Spacer(modifier = Modifier.weight(1f))
         Button(
             onClick = {
-                onClick()
+                viewModel.logout()
+                navController.navigate("login"){
+                    popUpTo("admin_main"){
+                        inclusive = true
+                    }
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
