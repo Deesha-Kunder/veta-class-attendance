@@ -1,4 +1,4 @@
-package com.ahseed.veta.screen.student.screen
+package com.ahseed.veta.screen.student
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
