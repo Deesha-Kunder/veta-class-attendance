@@ -6,7 +6,7 @@ data class RegisterStudent(
     val name:String,
     val email:String,
     val profession:String,
-    val courseHours: Int,
+    val courseHour: Int,
     val batch: String,
     val joinedDate: String
 )

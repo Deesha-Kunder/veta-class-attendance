@@ -190,7 +190,7 @@ fun RegisterStudentScreen(
                         name = studentName,
                         email = studentEmail,
                         profession = profession,
-                        courseHours = courseHour.toIntOrNull()?:0,
+                        courseHour = courseHour.toIntOrNull()?:0,
                         batch = batch,
                         joinedDate = selectedDate
                     )
