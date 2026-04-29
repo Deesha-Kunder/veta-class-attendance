@@ -55,10 +55,10 @@ public class SecurityConfig {
                 .exceptionHandling(exception ->exception.authenticationEntryPoint(authEntryPointJwt))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/signup","/api/auth/login","/api/auth/refresh" ).permitAll()
-                .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
-                .requestMatchers("/api/student/**").hasAuthority("STUDENT")
-                .anyRequest().authenticated());
+                        .requestMatchers("/api/auth/signup","/api/auth/login","/api/auth/refresh","/error" ).permitAll()
+                        .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/api/student/**").hasAuthority("STUDENT")
+                        .anyRequest().authenticated());
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
