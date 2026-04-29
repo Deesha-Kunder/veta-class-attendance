@@ -6,9 +6,9 @@ import retrofit2.Response
 import retrofit2.http.GET
 
 interface OnboardingApi {
-    @GET("api/onboarding/admin")
+    @GET("api/admin/onboarding")
     suspend fun getOnboardingData(): Response<OnboardingAdmin>
 
-    @GET("api/onboarding/student")
+    @GET("api/student/onboarding")
     suspend fun getOnboardingStudentData(): Response<OnboardingStudent>
 }
