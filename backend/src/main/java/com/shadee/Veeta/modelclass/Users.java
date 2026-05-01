@@ -46,4 +46,6 @@ public class Users {
     @OneToOne(optional = true)
     @JoinColumn(name = "student_id",nullable = true)
     private Student student;
+
+    private boolean faceRegistered;
 }

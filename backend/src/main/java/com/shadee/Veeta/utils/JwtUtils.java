@@ -77,6 +77,14 @@ public class JwtUtils {
         return getAllClaimsFromToken(token).getExpiration();
     }
 
+    public String getUserIdFromToken(String token) {
+        return getAllClaimsFromToken(token).get("userId", String.class);
+    }
+
+    public String getRoleFromToken(String token) {
+        return getAllClaimsFromToken(token).get("role", String.class);
+    }
+
     public Claims getAllClaimsFromToken(String token) {
         return Jwts.parser()
                 .verifyWith(key)

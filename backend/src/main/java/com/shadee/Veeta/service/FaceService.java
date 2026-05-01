@@ -3,49 +3,63 @@ package com.shadee.Veeta.service;
 import com.shadee.Veeta.dto.FaceRegisterRequest;
 import com.shadee.Veeta.dto.RecognizeRequest;
 import com.shadee.Veeta.modelclass.FaceEmbedding;
+import com.shadee.Veeta.modelclass.Users;
 import com.shadee.Veeta.repository.FaceEmbeddingRepository;
+import com.shadee.Veeta.repository.UserRepository;
+import jakarta.persistence.Embeddable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class FaceService {
     @Autowired
     private FaceEmbeddingRepository repository;
 
-    public void registerFace(FaceRegisterRequest request){
-        FaceEmbedding entity = new FaceEmbedding();
+    @Autowired
+    private UserRepository userRepository;
+
+    public Boolean registerFace(FaceRegisterRequest request){
+        Optional<FaceEmbedding> optional = repository.findByStudentId(request.getStudentId());
+        boolean isNew = optional.isEmpty();
+
+        FaceEmbedding entity = optional.orElse(new FaceEmbedding());
+
         entity.setStudentId(request.getStudentId());
         entity.setName(request.getName());
         entity.setEmbedding(request.getEmbedding());
 
         repository.save(entity);
+
+        Users user = userRepository.findById(request.getStudentId())
+                .orElseThrow(()->new RuntimeException("User not found"));
+
+        user.setFaceRegistered(true);
+        userRepository.save(user);
+        return isNew;
     }
-    public Map<String, Object> recognizeFace(RecognizeRequest request){
-        float bestScore = 0f;
-        FaceEmbedding bestMatch = null;
-        List<FaceEmbedding> all = repository.findAll();
-        for(FaceEmbedding stored :all){
-            float score = cosineSimilarity(
-                    stored.getEmbedding(),
-                    request.getEmbedding()
-            );
-            if(score > bestScore){
-                bestScore = score;
-                bestMatch = stored;
-            }
-        }
-        if(bestMatch != null && bestScore > 0.7f){
+    public Map<String, Object> recognizeFace(String studentId, RecognizeRequest request){
+
+        FaceEmbedding stored = repository.findByStudentId(studentId)
+                .orElseThrow(()->new RuntimeException("Face not registered"));
+
+        float score = cosineSimilarity(
+                stored.getEmbedding(),
+                request.getEmbedding()
+        );
+        if (score > 0.7f) {
             return Map.of(
-                    "studentId",bestMatch.getStudentId(),
-                    "studentName",bestMatch.getName(),
-                    "confidence",bestScore
+                    "studentId",stored.getStudentId(),
+                    "studentName",stored.getName(),
+                    "confidence",score,
+                    "status","VERIFIED"
             );
         }
-        throw new RuntimeException("Not Recognized");
+        throw new RuntimeException("Face does not Recognized");
     }
     private float cosineSimilarity(List<Float> a, List<Float> b){
         float dot = 0f;

@@ -2,7 +2,11 @@ package com.shadee.Veeta.controller;
 
 import com.shadee.Veeta.dto.FaceRegisterRequest;
 import com.shadee.Veeta.dto.RecognizeRequest;
+import com.shadee.Veeta.modelclass.AttendanceSession;
+import com.shadee.Veeta.service.AttendanceSessionService;
 import com.shadee.Veeta.service.FaceService;
+import com.shadee.Veeta.utils.JwtUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,26 +22,49 @@ public class FaceController {
     @Autowired
     private FaceService service;
 
+    @Autowired
+    private JwtUtils jw;
+
+    @Autowired
+    private AttendanceSessionService attendanceSessionService;
+
     @PostMapping("/register")
     public ResponseEntity<?> registerFace(
             @RequestBody FaceRegisterRequest request) {
-        service.registerFace(request);
+        boolean isNew = service.registerFace(request);
         return ResponseEntity.ok(
                 Map.of(
                         "success", true,
-                        "message", "Registered"
+                        "message", isNew ? "Face registered" : "Face updated"
                 )
         );
     }
 
     @PostMapping("/recognize")
     public ResponseEntity<?> recognizeFace(
-            @RequestBody RecognizeRequest request
+            @RequestBody RecognizeRequest request,
+            HttpServletRequest httpServletRequest
     ) {
+        String authHeader = httpServletRequest.getHeader("Authorization");
+        String token = authHeader.substring(7);
+
+        String studentId = jw.getUserIdFromToken(token);
+
         try {
-            return ResponseEntity.ok(service.recognizeFace(request));
+            //Face Verification
+            Map<String, Object> faceResult = service.recognizeFace(studentId, request);
+
+            // Mark Attendance
+            Map<String, Object> attendanceResult = attendanceSessionService.markAttendance(studentId, 1);
+
+            return ResponseEntity.ok(
+                    Map.of(
+                            "faceResult",faceResult,
+                            "AttendanceResult", attendanceResult
+                    )
+            );
         } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(
+            return ResponseEntity.status(401).body(
                     Map.of(
                             "message", e.getMessage()
                     )
