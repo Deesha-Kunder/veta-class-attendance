@@ -3,6 +3,8 @@ package com.ahseed.veta.utils
 import android.util.Log
 import java.sql.Date
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
@@ -38,4 +40,37 @@ fun getTimeAgo(timestamp: String): String {
         "Unknown"
     }
 
+}
+
+fun formatDateTime(dateTime:String?):String{
+    if(dateTime == null) return ""
+    val parsed = LocalDateTime.parse(dateTime)
+    val formatter = DateTimeFormatter.ofPattern(
+        "dd MMM yyyy hh:mm a"
+    )
+    return parsed.format(formatter);
+}
+
+fun formatTime(dateTime: String?): String {
+    if (dateTime == null) return "--"
+
+    return try {
+        val parsed = LocalDateTime.parse(dateTime)
+        val formatter = DateTimeFormatter.ofPattern("hh:mm a")
+        parsed.format(formatter)
+    } catch (e: Exception) {
+        dateTime
+    }
+}
+
+fun formatDate(dateTime: String?): String {
+    if (dateTime == null) return "--"
+
+    return try {
+        val parsed = LocalDateTime.parse(dateTime)
+        val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
+        parsed.format(formatter)
+    } catch (e: Exception) {
+        dateTime
+    }
 }

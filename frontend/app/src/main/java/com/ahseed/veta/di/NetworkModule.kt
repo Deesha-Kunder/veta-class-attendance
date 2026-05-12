@@ -1,11 +1,13 @@
 package com.ahseed.veta.di
 
 import android.util.Log
+import com.ahseed.veta.data.interfaces.AttendanceApi
 import com.ahseed.veta.data.interfaces.AuthApi
 import com.ahseed.veta.data.interfaces.FaceApi
 import com.ahseed.veta.data.interfaces.OnboardingApi
 import com.ahseed.veta.data.interfaces.RefreshApi
 import com.ahseed.veta.data.interfaces.RegisterStudentApi
+import com.ahseed.veta.data.interfaces.StudentStatusApi
 import com.ahseed.veta.data.interfaces.UploadApi
 import com.ahseed.veta.data.repository.TokenAuthenticator
 import com.ahseed.veta.sharedpreferences.AuthPrefs
@@ -19,6 +21,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
@@ -98,6 +101,18 @@ object NetworkModule {
     @Singleton
     fun provideRegisterStudent(retrofit: Retrofit): RegisterStudentApi{
         return retrofit.create(RegisterStudentApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideStudentStatus(retrofit: Retrofit): StudentStatusApi{
+        return retrofit.create(StudentStatusApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetSessions(retrofit: Retrofit): AttendanceApi{
+        return retrofit.create(AttendanceApi::class.java)
     }
 
 }

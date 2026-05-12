@@ -15,5 +15,7 @@ data class FaceRecognizeRequest(
 data class FaceRecognizeResponse(
     val studentId:String,
     val studentName:String,
-    val confidence: Float
+    val confidence: Float,
+    val checkInTime: String?,
+    val checkOutTime:String?
 )

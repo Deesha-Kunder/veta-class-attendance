@@ -16,7 +16,10 @@ class RegisterStudentViewModel @Inject constructor(
     private val repository: RegisterStudentRepository
 ) : ViewModel() {
 
-    private val _uiMessage = MutableSharedFlow<String?>()
+    private val _uiMessage = MutableSharedFlow<String>(
+        replay = 0,
+        extraBufferCapacity = 1
+    )
     val uiMessage = _uiMessage.asSharedFlow()
 
     fun registerStudent(request: RegisterStudent) {

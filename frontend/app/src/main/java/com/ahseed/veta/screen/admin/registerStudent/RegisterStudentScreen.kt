@@ -70,6 +70,15 @@ fun RegisterStudentScreen(
     LaunchedEffect(Unit) {
         viewModel.uiMessage.collect { message ->
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+
+            if(message == "Registered Successfully"){
+                studentName =""
+                studentEmail =""
+                courseHour =""
+                profession =""
+                batch=""
+                selectedDate=""
+            }
         }
     }
 
