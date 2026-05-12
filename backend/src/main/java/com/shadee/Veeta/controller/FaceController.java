@@ -45,6 +45,7 @@ public class FaceController {
             @RequestBody RecognizeRequest request,
             HttpServletRequest httpServletRequest
     ) {
+        System.out.println("reached recognize");
         String authHeader = httpServletRequest.getHeader("Authorization");
         String token = authHeader.substring(7);
 
@@ -52,9 +53,11 @@ public class FaceController {
 
         try {
             //Face Verification
+            System.out.println("trying to recognize face");
             Map<String, Object> faceResult = service.recognizeFace(studentId, request);
 
             // Mark Attendance
+            System.out.println("marking attendance session");
             Map<String, Object> attendanceResult = attendanceSessionService.markAttendance(studentId, 1);
 
             return ResponseEntity.ok(

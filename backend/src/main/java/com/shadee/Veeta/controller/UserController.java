@@ -24,7 +24,7 @@ public class UserController {
     @Autowired
     private StudentRegisterService studentRegisterService;
 
-    @GetMapping("/admin/onboarding")
+    @GetMapping("/admin")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<UserInfo> getAdminDataById(Authentication authentication) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
@@ -34,7 +34,7 @@ public class UserController {
         return ResponseEntity.ok(userInfo);
     }
 
-    @GetMapping("/student/onboarding")
+    @GetMapping("/student")
     @PreAuthorize("hasAuthority('STUDENT')")
     public ResponseEntity<Student> getStudentDataById(Authentication authentication) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();

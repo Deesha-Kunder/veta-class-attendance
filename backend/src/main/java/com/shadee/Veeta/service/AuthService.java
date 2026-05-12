@@ -3,7 +3,9 @@ package com.shadee.Veeta.service;
 import com.shadee.Veeta.dto.*;
 import com.shadee.Veeta.modelclass.Role;
 import com.shadee.Veeta.modelclass.Student;
+import com.shadee.Veeta.modelclass.StudentCourse;
 import com.shadee.Veeta.modelclass.Users;
+import com.shadee.Veeta.repository.StudentCourseRepository;
 import com.shadee.Veeta.repository.StudentRegisterRepository;
 import com.shadee.Veeta.repository.UserRepository;
 import com.shadee.Veeta.security.CustomUserDetails;
@@ -39,6 +41,9 @@ public class AuthService {
     @Autowired
     StudentRegisterRepository studentRegisterRepository;
 
+    @Autowired
+    private StudentCourseRepository studentCourseRepository;
+
     public ResponseEntity<LoginResponse> login(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -72,6 +77,8 @@ public class AuthService {
         user.setPassword(encoder.encode(signUpRequest.getPassword()));
         user.setRole(signUpRequest.getRole());
 
+        Student studentData = null;
+
         if("STUDENT".equalsIgnoreCase(signUpRequest.getRole().name())){
             Optional<Student> student = studentRegisterRepository.findByEmail(signUpRequest.getEmail());
 
@@ -80,9 +87,21 @@ public class AuthService {
                         .status(HttpStatus.BAD_REQUEST)
                         .body(new SignUpResponse("Student email is not found in Student records",null));
             }
-            user.setStudent(student.get());
+            studentData = student.get();
+            user.setStudent(studentData);
         }
         Users savedUser = userRepository.save(user);
+
+        if(studentData != null){
+            StudentCourse studentCourse = new StudentCourse();
+            studentCourse.setStudentId(savedUser.getUserId());
+            studentCourse.setCourseId(1);
+            studentCourse.setEmailId(savedUser.getEmail());
+            studentCourse.setRequiredMinutes(studentData.getCourseHour() * 60L);
+            studentCourse.setTotalCompletedMinutes(0L);
+
+            studentCourseRepository.save(studentCourse);
+        }
 
         UserInfo userInfo = new UserInfo(
                 savedUser.getUserId(),

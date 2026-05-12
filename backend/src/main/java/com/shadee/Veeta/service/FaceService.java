@@ -47,11 +47,13 @@ public class FaceService {
         FaceEmbedding stored = repository.findByStudentId(studentId)
                 .orElseThrow(()->new RuntimeException("Face not registered"));
 
+        System.out.println("calculating score");
         float score = cosineSimilarity(
                 stored.getEmbedding(),
                 request.getEmbedding()
         );
         if (score > 0.7f) {
+            System.out.println("found now returning the result");
             return Map.of(
                     "studentId",stored.getStudentId(),
                     "studentName",stored.getName(),

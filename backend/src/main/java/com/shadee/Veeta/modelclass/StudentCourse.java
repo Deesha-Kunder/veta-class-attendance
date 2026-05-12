@@ -16,6 +16,7 @@ public class StudentCourse {
     private Long id;
     private String studentId;
     private int courseId;
+    private String emailId;
     private Long totalCompletedMinutes;
     private Long requiredMinutes;
 }

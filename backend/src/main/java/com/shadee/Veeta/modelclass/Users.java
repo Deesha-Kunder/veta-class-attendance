@@ -47,5 +47,6 @@ public class Users {
     @JoinColumn(name = "student_id",nullable = true)
     private Student student;
 
-    private boolean faceRegistered;
+    @Column(name = "face_registered", nullable = false)
+    private boolean faceRegistered = false;
 }
