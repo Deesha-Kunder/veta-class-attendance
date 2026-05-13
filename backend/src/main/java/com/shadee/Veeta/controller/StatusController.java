@@ -1,6 +1,6 @@
 package com.shadee.Veeta.controller;
 
-import com.shadee.Veeta.repository.StatusService;
+import com.shadee.Veeta.service.StatusService;
 import com.shadee.Veeta.utils.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

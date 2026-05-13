@@ -1,17 +1,16 @@
 package com.shadee.Veeta.controller;
 
+import com.shadee.Veeta.dto.StudentListResponse;
 import com.shadee.Veeta.dto.StudentRegisterRequest;
 import com.shadee.Veeta.modelclass.Student;
 import com.shadee.Veeta.service.StudentRegisterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -38,5 +37,10 @@ public class StudentRegisterController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
 
+    }
+    @GetMapping("/get/student-list")
+    public ResponseEntity<List<StudentListResponse>> getAllStudents(){
+        List<StudentListResponse> students = service.getAllStudents();
+        return ResponseEntity.ok(students);
     }
 }

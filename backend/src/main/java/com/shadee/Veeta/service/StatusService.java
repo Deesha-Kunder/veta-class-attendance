@@ -1,7 +1,9 @@
-package com.shadee.Veeta.repository;
+package com.shadee.Veeta.service;
 
 import com.shadee.Veeta.modelclass.AttendanceSession;
 import com.shadee.Veeta.modelclass.Users;
+import com.shadee.Veeta.repository.AttendanceSessionRepository;
+import com.shadee.Veeta.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
