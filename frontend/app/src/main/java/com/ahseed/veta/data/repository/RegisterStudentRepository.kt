@@ -1,6 +1,7 @@
 package com.ahseed.veta.data.repository
 
 import com.ahseed.veta.data.interfaces.RegisterStudentApi
+import com.ahseed.veta.data.interfaces.StudentsListApi
 import com.ahseed.veta.data.modelclass.RegisterStudent
 import com.ahseed.veta.data.modelclass.RegisterStudentResponse
 import javax.inject.Inject

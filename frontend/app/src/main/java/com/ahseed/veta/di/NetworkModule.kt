@@ -8,6 +8,7 @@ import com.ahseed.veta.data.interfaces.OnboardingApi
 import com.ahseed.veta.data.interfaces.RefreshApi
 import com.ahseed.veta.data.interfaces.RegisterStudentApi
 import com.ahseed.veta.data.interfaces.StudentStatusApi
+import com.ahseed.veta.data.interfaces.StudentsListApi
 import com.ahseed.veta.data.interfaces.UploadApi
 import com.ahseed.veta.data.repository.TokenAuthenticator
 import com.ahseed.veta.sharedpreferences.AuthPrefs
@@ -113,6 +114,12 @@ object NetworkModule {
     @Singleton
     fun provideGetSessions(retrofit: Retrofit): AttendanceApi{
         return retrofit.create(AttendanceApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideStudentList(retrofit: Retrofit): StudentsListApi{
+        return retrofit.create(StudentsListApi::class.java)
     }
 
 }

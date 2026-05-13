@@ -76,7 +76,7 @@ fun UserMainScreen(
             ) }
             composable(route = BottomNavItem.Attendance.route) { MarkAttendance(navController = navController) }
             composable(route = BottomNavItem.Report.route) { ReportScreen() }
-            composable(route = BottomNavItem.Profile.route) { ProfileScreen(navController= navController) }
+            composable(route = BottomNavItem.Profile.route) { ProfileScreen(navController= parentNavController) }
 
             composable("registerFaceScreen"){
                 RegisterFaceScreen(navController = navController)
