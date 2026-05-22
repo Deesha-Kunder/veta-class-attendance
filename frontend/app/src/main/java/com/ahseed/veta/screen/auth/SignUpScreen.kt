@@ -23,6 +23,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -76,194 +77,193 @@ fun SignUpScreen(
             }
         }
     }
-
-    Card(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 24.dp, vertical = 100.dp),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(5.dp)
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
     ) {
-        Column(
+        Card(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .padding(horizontal = 24.dp, vertical = 80.dp),
+            shape = RoundedCornerShape(18.dp),
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
+            elevation = CardDefaults.cardElevation(5.dp)
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.applogo),
-                contentDescription = "appLogo",
-                modifier = Modifier.size(56.dp),
-                tint = Purple80
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Veta class\nAttendance System",
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.Bold, textAlign = TextAlign.Center
-                ),
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(26.dp))
-
-            TabRow(
-                selectedTabIndex = selectedTab,
-                containerColor = Color.Transparent,
-                contentColor = MaterialTheme.colorScheme.background,
-                indicator = {},
-                divider = {}) {
-                Tab(
-                    selected = selectedTab == 0,
-                    onClick = {
-                        selectedTab = 0
-                        viewModel.setRole("ADMIN")
-                    },
-
-                    text = {
-                        Text(
-                            text = "Admin",
-                            color = if (selectedTab == 0) Color.White else Color.Black,
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(
-                                    if (selectedTab == 0) Purple80 else Color.Transparent
-                                )
-                                .border(
-                                    width = 1.dp,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    shape = RoundedCornerShape(16.dp)
-                                )
-                                .padding(horizontal = 29.dp, vertical = 8.dp)
-                        )
-
-                    })
-                Tab(
-                    selected = selectedTab == 1,
-                    onClick = {
-                        selectedTab = 1
-                        viewModel.setRole("STUDENT")
-                    },
-                    text = {
-                        Text(
-                            "Student",
-                            color = if (selectedTab == 1) Color.White else Color.Black,
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(
-                                    if (selectedTab == 1) Purple80 else Color.Transparent
-                                )
-                                .border(
-                                    width = 1.dp,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    shape = RoundedCornerShape(16.dp)
-                                )
-                                .padding(horizontal = 29.dp, vertical = 8.dp)
-                        )
-                    })
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-            OutlinedTextField(
-                value = username,
-                onValueChange = {username = it
-                                viewModel.validateUsername(it)},
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(text = "Username") },
-                singleLine = true,
-                shape = RoundedCornerShape(10.dp),
-                isError = validateUsername != null,
-                supportingText = {
-                    validateUsername?.let {
-                        error ->
-                        Text(
-                            text = error,
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                }
-            )
-            Spacer(modifier = Modifier.height(2.dp))
-            OutlinedTextField(
-                value = email,
-                onValueChange = { email = it
-                                viewModel.validateEmail(email)},
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(text = "Email") },
-                singleLine = true,
-                shape = RoundedCornerShape(10.dp),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email
-                ),
-                isError = validateEmail != null,
-                supportingText = {
-                    validateEmail?.let {
-                            error ->
-                        Text(
-                            text = error,
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                }
-            )
-            Spacer(modifier = Modifier.height(2.dp))
-            OutlinedTextField(
-                value = password,
-                onValueChange = {
-                   password = it
-                    viewModel.validatePassword(password)
-                },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(text = "Password") },
-                singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
-                shape = RoundedCornerShape(10.dp),
-                isError = validatePassword != null,
-                supportingText = {
-                    validatePassword?.let {
-                            error ->
-                        Text(
-                            text = error,
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                }
-
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Button(
-                onClick = {
-                    viewModel.signUp(username, email, password)
-                },
-                shape = RoundedCornerShape(10.dp),
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .size(48.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Purple80
-                )
+                    .fillMaxSize()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = "SignUp",
-                    style = MaterialTheme.typography.titleMedium,
+                Icon(
+                    painter = painterResource(id = R.drawable.applogo),
+                    contentDescription = "appLogo",
+                    modifier = Modifier.size(56.dp),
+                    tint = Purple80
                 )
-            }
-            Spacer(modifier = Modifier.height(26.dp))
-            Row {
-                Text(text = "Have an account? ")
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "login", modifier = Modifier.clickable {
+                    text = "Veta class\nAttendance System",
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold, textAlign = TextAlign.Center
+                    ),
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(26.dp))
+
+                TabRow(
+                    selectedTabIndex = selectedTab,
+                    containerColor = Color.Transparent,
+                    indicator = {},
+                    divider = {}
+                ) {
+                    val tabs = listOf("Admin", "Student")
+                    tabs.forEachIndexed { index,title->
+                        Tab(
+                            selected = selectedTab == index,
+                            onClick = {
+                                selectedTab = index
+                                viewModel.setRole(
+                                    if(index == 0) "ADMIN" else "STUDENT")
+                            },
+                            selectedContentColor = MaterialTheme.colorScheme.onPrimary,
+                            unselectedContentColor = MaterialTheme.colorScheme.onSurface,
+                            text = {
+                                Text(
+                                    text = title,
+                                    color = if (selectedTab == index)
+                                        MaterialTheme.colorScheme.onPrimary
+                                    else
+                                        MaterialTheme.colorScheme.onSurface,
+
+                                    style = MaterialTheme.typography.titleMedium,
+
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clip(RoundedCornerShape(16.dp))
+                                        .background(
+                                            if (selectedTab == index)
+                                                Purple80
+                                            else
+                                                Color.Transparent
+                                        )
+                                        .border(
+                                            width = 1.dp,
+                                            color = Purple80,
+                                            shape = RoundedCornerShape(16.dp)
+                                        )
+                                        .padding(vertical = 12.dp),
+
+                                    textAlign = TextAlign.Center
+                                )
+                            })
+                    }
+
+
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                OutlinedTextField(
+                    value = username,
+                    onValueChange = {username = it
+                        viewModel.validateUsername(it)},
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(text = "Username") },
+                    singleLine = true,
+                    shape = RoundedCornerShape(10.dp),
+                    isError = validateUsername != null,
+                    supportingText = {
+                        validateUsername?.let {
+                                error ->
+                            Text(
+                                text = error,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it
+                        viewModel.validateEmail(email)},
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(text = "Email") },
+                    singleLine = true,
+                    shape = RoundedCornerShape(10.dp),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email
+                    ),
+                    isError = validateEmail != null,
+                    supportingText = {
+                        validateEmail?.let {
+                                error ->
+                            Text(
+                                text = error,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = {
+                        password = it
+                        viewModel.validatePassword(password)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(text = "Password") },
+                    singleLine = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    shape = RoundedCornerShape(10.dp),
+                    isError = validatePassword != null,
+                    supportingText = {
+                        validatePassword?.let {
+                                error ->
+                            Text(
+                                text = error,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
+
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Button(
+                    onClick = {
+                        viewModel.signUp(username, email, password)
+                    },
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .size(48.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Purple80
+                    )
+                ) {
+                    Text(
+                        text = "SignUp",
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                }
+                Spacer(modifier = Modifier.height(26.dp))
+                Row {
+                    Text(text = "Have an account? ")
+                    Text(
+                        text = "login", modifier = Modifier.clickable {
                             navController.navigate("login") {
                                 popUpTo("signup") { inclusive = true }
                             }
 
-                    }, color = Color.Blue
-                )
+                        }, color = Color.Blue
+                    )
+                }
             }
         }
     }
+
 }

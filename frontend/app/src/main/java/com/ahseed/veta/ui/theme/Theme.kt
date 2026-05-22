@@ -8,6 +8,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
@@ -16,7 +17,8 @@ private val DarkColorScheme = darkColorScheme(
     secondary = PurpleGrey80,
     tertiary = Pink80,
     background = Black, // dark background
-    onBackground = White
+    onBackground = Color(0xFF121212),
+    surface = Color(0xFF1E1E1E),
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -25,7 +27,8 @@ private val LightColorScheme = lightColorScheme(
     secondary = PurpleGrey40,
     tertiary = Pink40,
     background = White, // light background
-    onBackground = Black
+    onBackground = Color(0xFFF5F5F5),
+    surface = Color(0xFFFFFFFF),
 
 
     /* Other default colors to override
@@ -43,7 +46,7 @@ private val LightColorScheme = lightColorScheme(
 fun VetaTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
