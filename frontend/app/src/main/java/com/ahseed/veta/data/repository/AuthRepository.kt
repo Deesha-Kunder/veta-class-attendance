@@ -4,6 +4,7 @@ import android.util.Log
 import com.ahseed.veta.sharedpreferences.AuthPrefs
 import com.ahseed.veta.data.interfaces.AuthApi
 import com.ahseed.veta.data.interfaces.RefreshApi
+import com.ahseed.veta.data.modelclass.ErrorResponse
 import com.ahseed.veta.data.modelclass.LoginRequest
 import com.ahseed.veta.data.modelclass.LoginResponse
 import com.ahseed.veta.data.modelclass.RefreshTokenRequest
@@ -39,7 +40,16 @@ class AuthRepository @Inject constructor(
             )
             Result.success(body)
         } else {
-            Result.failure(Exception("Login Failed"))
+
+            val errorJson = response.errorBody()?.string()
+            val errorResponse = try{
+                GsonBuilder()
+                    .create()
+                    .fromJson(errorJson, ErrorResponse::class.java)
+            }catch (e: Exception){
+                null
+            }
+            Result.failure(Exception(errorResponse?.message?:"Login Failed"))
         }
     }
 
@@ -49,7 +59,15 @@ class AuthRepository @Inject constructor(
         return if (response.isSuccessful && response.body() != null) {
             Result.success(response.body()!!)
         } else {
-            Result.failure(Exception(response.message()))
+            val errorJson = response.errorBody()?.string()
+            val errorResponse = try{
+                GsonBuilder()
+                    .create()
+                    .fromJson(errorJson, ErrorResponse::class.java)
+            }catch (e: Exception){
+                null
+            }
+            Result.failure(Exception(errorResponse?.message?:"Signup Failed"))
         }
     }
 
