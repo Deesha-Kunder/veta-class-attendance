@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -29,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -56,19 +58,13 @@ fun AdminProfileScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .size(56.dp),
+                .padding(top = 12.dp, start = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            IconButton(onClick = {}) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBackIosNew,
-                    contentDescription = "back"
-                )
-            }
             Text(
                 text = "Profile",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
             )
             IconButton(onClick = {}) {
                 Icon(
@@ -87,16 +83,12 @@ fun AdminProfileScreen(
                 imageVector = Icons.Default.Person,
                 contentDescription = "Profile pic",
                 modifier = Modifier
-                    .size(120.dp)
+                    .size(100.dp)
                     .clip(CircleShape)
                     .background(Color.LightGray),
                 tint = Color.DarkGray
             )
-            Text(
-                text = adminProfile?.username?:"unknown",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(5.dp)
-            )
+            Spacer(Modifier.height(8.dp))
             Text(
                 text = adminProfile?.role?:"unknown",
                 style = MaterialTheme.typography.labelLarge,
@@ -106,9 +98,10 @@ fun AdminProfileScreen(
         Spacer(modifier = Modifier.height(20.dp))
         Text(
             text = "Details",
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(8.dp)
         )
+        ProfileDetailRow(label = "Name", value = adminProfile?.username?:"unknown")
         ProfileDetailRow(label = "Email ID", value = adminProfile?.email?:"unknown")
 
         Spacer(modifier = Modifier.weight(1f))
@@ -123,8 +116,10 @@ fun AdminProfileScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
-            shape = MaterialTheme.shapes.large,
+                .padding(bottom = 30.dp)
+                .height(56.dp)
+                ,
+            shape = MaterialTheme.shapes.extraLarge,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Purple80
             )
@@ -135,7 +130,6 @@ fun AdminProfileScreen(
             )
         }
     }
-
 }
 
 @Composable
@@ -156,7 +150,6 @@ fun ProfileDetailRow(label: String, value: String) {
             Text(
                 text = value,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Black
             )
         }
         HorizontalDivider(color = Color.LightGray, thickness = 2.dp)

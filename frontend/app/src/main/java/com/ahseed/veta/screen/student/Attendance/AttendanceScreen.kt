@@ -48,6 +48,8 @@ import com.ahseed.veta.data.modelclass.FaceRecognizeRequest
 import com.ahseed.veta.sharedcomponent.CameraPreview
 import com.ahseed.veta.sharedcomponent.FaceNetHelper
 import com.ahseed.veta.sharedcomponent.RequestCameraPermission
+import com.ahseed.veta.ui.theme.Purple40
+import com.ahseed.veta.ui.theme.PurpleGrey40
 import com.ahseed.veta.ui.theme.primary
 import com.ahseed.veta.utils.formatDateTime
 import kotlinx.coroutines.Dispatchers
@@ -87,29 +89,19 @@ fun MarkAttendance(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(8.dp),
+            .padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row (
             modifier = Modifier
                 .fillMaxWidth()
-                .height(56.dp),
+                .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            IconButton(
-                onClick = {
-                    navController.popBackStack()
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBackIosNew,
-                    contentDescription = "back"
-                )
-            }
             Text(
                 text = "Attendance",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 textAlign = TextAlign.Center
             )
             IconButton(
@@ -128,12 +120,14 @@ fun MarkAttendance(
                 .fillMaxWidth()
                 .aspectRatio(1f)
                 .clip(RoundedCornerShape(10.dp))
-                .background(color = Color.LightGray),
+                .background(color = Purple40),
             contentAlignment = Alignment.Center
         ) {
             when{
                 isLoading->{
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(
+                        color = Color.White
+                    )
                 }
                 startCamera->{
                     RequestCameraPermission {
@@ -212,7 +206,7 @@ fun MarkAttendance(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
-            shape = RoundedCornerShape(15.dp),
+            shape = MaterialTheme.shapes.extraLarge,
             colors = ButtonDefaults.buttonColors(containerColor = primary),
             enabled = capturedBitMap != null && !isLoading
         )

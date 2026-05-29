@@ -55,26 +55,20 @@ fun ProfileScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .size(56.dp),
+                .padding(top = 8.dp, start = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            IconButton(onClick = {}) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBackIosNew,
-                    contentDescription = "back"
-                )
-            }
             Text(
                 text = "Profile",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
             )
             IconButton(onClick = {
 
             }) {
                 Icon(
                     imageVector = Icons.Filled.Edit,
-                    contentDescription = "back"
+                    contentDescription = "edit"
                 )
             }
         }
@@ -88,18 +82,15 @@ fun ProfileScreen(
                 imageVector = Icons.Default.Person,
                 contentDescription = "Profile pic",
                 modifier = Modifier
-                    .size(120.dp)
+                    .size(100.dp)
                     .clip(CircleShape)
                     .background(Color.LightGray),
                 tint = Color.DarkGray
             )
+            Spacer(modifier = Modifier.height(8.dp))
+
             Text(
-                text = studentProfile?.name?:"unknown" ,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(5.dp)
-            )
-            Text(
-                text = "batch ${studentProfile?.batch}",
+                text = "STUDENT",
                 style = MaterialTheme.typography.labelLarge,
 
                 )
@@ -110,7 +101,9 @@ fun ProfileScreen(
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(8.dp)
         )
+        ProfileDetailRow(label = "Name", value = studentProfile?.name?:"unknown")
         ProfileDetailRow(label = "Email ID", value = studentProfile?.email?:"unknown")
+        ProfileDetailRow(label = "Batch", value = studentProfile?.batch?:"unknown")
         ProfileDetailRow(label = "Profession", value = studentProfile?.profession?:"unknown")
         ProfileDetailRow(label = "Joined Date", value = studentProfile?.joinedDate?:"unknown")
         ProfileDetailRow(label = "Allocated Course Hours", value = "${studentProfile?.courseHour} hours")
@@ -128,7 +121,7 @@ fun ProfileScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            shape = MaterialTheme.shapes.large,
+            shape = MaterialTheme.shapes.extraLarge,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Purple80
             )
@@ -158,8 +151,7 @@ fun ProfileDetailRow(label: String, value: String) {
             )
             Text(
                 text = value,
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Black
+                style = MaterialTheme.typography.bodyMedium
             )
         }
         HorizontalDivider(color = Color.LightGray, thickness = 2.dp)

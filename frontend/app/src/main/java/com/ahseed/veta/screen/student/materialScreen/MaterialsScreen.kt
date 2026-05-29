@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.DownloadForOffline
 import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -68,7 +69,7 @@ fun MaterialScreen(
     val fileState by viewModel.fileState.collectAsState()
     val selectedUrl by viewModel.selectedUrl.collectAsState()
     val context = LocalContext.current
-    
+
     val selectedUrlForDownload by viewModel.selectedUrlForDownload.collectAsState()
 
     LaunchedEffect(selectedUrl) {
@@ -87,11 +88,38 @@ fun MaterialScreen(
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        )
+        {
             when (fileState) {
-                is FileState.Idle -> Text("No files yet")
-                is FileState.Loading -> Text("Loading files")
-                is FileState.Error -> Text("Unable to get the files")
+                is FileState.Idle ->
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text("No files yet")
+                    }
+
+                is FileState.Loading ->
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        CircularProgressIndicator()
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text("Loading files")
+                    }
+
+                is FileState.Error ->
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text("Unable to get the files")
+                    }
+
                 is FileState.Success -> {
 
                     LazyColumn {
@@ -101,7 +129,7 @@ fun MaterialScreen(
                                 onDownloadClick = {
                                     selectedMaterial = material
                                     viewModel.setSelectedUrl(material.fileId)
-                                                  },
+                                },
                                 onClick = {
                                     viewModel.viewFile(material.fileId)
                                 }
@@ -118,12 +146,12 @@ fun MaterialScreen(
                 sheetState = sheetState
             ) {
                 Text(
-                    text = "Download",
+                    text = "Are you sure want to download ?",
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(10.dp)
                 )
                 Text(
-                    text = "Are you sure want to download ${selectedMaterial!!.filename} ?",
+                    text = selectedMaterial!!.filename,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(
                         horizontal = 16.dp, vertical = 8.dp
@@ -133,27 +161,34 @@ fun MaterialScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     OutlinedButton(
                         onClick =
-                            { selectedMaterial = null }
+                            { selectedMaterial = null },
+                        modifier = Modifier.weight(1f)
                     ) {
                         Text(
                             text = "Cancel"
                         )
                     }
-                    Button(onClick = {
-                        Log.d("Clicked download button","clicked")
-                        selectedMaterial?.let { material ->
-                            Log.d("Download", "Starting download for: ${material.filename}")
-                            viewModel.selectedUrlForDownload.value?.let { selectedUrl ->
-                                Log.d("Download", "Starting download for: $selectedUrlForDownload")
-                                FileUtil.downloadFile(context,selectedUrl,material.filename)
+                    Button(
+                        onClick = {
+                            Log.d("Clicked download button", "clicked")
+                            selectedMaterial?.let { material ->
+                                Log.d("Download", "Starting download for: ${material.filename}")
+                                viewModel.selectedUrlForDownload.value?.let { selectedUrl ->
+                                    Log.d(
+                                        "Download",
+                                        "Starting download for: $selectedUrlForDownload"
+                                    )
+                                    FileUtil.downloadFile(context, selectedUrl, material.filename)
+                                }
                             }
-                        }
-                        selectedMaterial = null
-                    }) {
+                            selectedMaterial = null
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
                         Text("Download")
                     }
                 }
@@ -174,9 +209,10 @@ fun MaterialRow(
             .padding(12.dp)
             .height(80.dp)
             .clickable {
-                Log.d("MaterialRow Click :","clicked")
-                onClick() }
-            .background(Color(0xFFF7F8FA), shape = RoundedCornerShape(20.dp)),
+                Log.d("MaterialRow Click :", "clicked")
+                onClick()
+            }
+            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(20.dp)),
 
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -197,12 +233,13 @@ fun MaterialRow(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = material.filename,
+                color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
             )
             Text(
                 text = getTimeAgo(material.addedAt),
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.DarkGray
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
         IconButton(
@@ -227,21 +264,13 @@ fun MaterialTopBar(onBackClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .size(56.dp),
+            .padding(top = 12.dp, start = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        IconButton(onClick = {
-            onBackClick()
-        }) {
-            Icon(
-                imageVector = Icons.Filled.ArrowBackIosNew,
-                contentDescription = "back"
-            )
-        }
         Text(
             text = "Materials",
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
         )
         IconButton(onClick = {}) {
             Icon(

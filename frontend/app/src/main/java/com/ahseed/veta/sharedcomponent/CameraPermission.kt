@@ -56,7 +56,7 @@ fun PermissionScreen(
 ){
     Column(
         modifier = Modifier.fillMaxSize()
-            .padding(24.dp),
+            .padding(22.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
@@ -67,7 +67,8 @@ fun PermissionScreen(
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onRequestPermission) {
             Text(
-                text = "Grant Permission"
+                text = "Grant Permission",
+                style = MaterialTheme.typography.titleMedium
             )
         }
     }

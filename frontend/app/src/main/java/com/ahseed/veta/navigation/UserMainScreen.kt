@@ -34,36 +34,45 @@ fun UserMainScreen(
         BottomNavItem.Report,
         BottomNavItem.Profile
     )
+    val bottomBarRoutes = listOf(
+        BottomNavItem.Material.route,
+        BottomNavItem.Attendance.route,
+        BottomNavItem.Report.route,
+        BottomNavItem.Profile.route
+    )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     Scaffold(
         bottomBar = {
-            NavigationBar {
-                items.forEach { item ->
-                    NavigationBarItem(
-                        selected = currentRoute == item.route,
-                        onClick = {
-                            if (currentRoute != item.route) {
-                                navController.navigate(item.route) {
-                                    popUpTo(navController.graph.startDestinationId) {
-                                        saveState = true
+            if(currentRoute in bottomBarRoutes){
+                NavigationBar {
+                    items.forEach { item ->
+                        NavigationBarItem(
+                            selected = currentRoute == item.route,
+                            onClick = {
+                                if (currentRoute != item.route) {
+                                    navController.navigate(item.route) {
+                                        popUpTo(navController.graph.startDestinationId) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
                                 }
-                            }
-                        },
-                        icon = { Icon(imageVector = item.icon, contentDescription = item.label) },
-                        label = { Text(text = item.label) },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Purple80,
-                            unselectedIconColor = Color.LightGray,
-                            selectedTextColor = Purple80,
-                            unselectedTextColor = Color.LightGray
+                            },
+                            icon = { Icon(imageVector = item.icon, contentDescription = item.label) },
+                            label = { Text(text = item.label) },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Purple80,
+                                unselectedIconColor = Color.LightGray,
+                                selectedTextColor = Purple80,
+                                unselectedTextColor = Color.LightGray
+                            )
                         )
-                    )
+                    }
                 }
             }
+
         }
     ) { innerPadding ->
         NavHost(

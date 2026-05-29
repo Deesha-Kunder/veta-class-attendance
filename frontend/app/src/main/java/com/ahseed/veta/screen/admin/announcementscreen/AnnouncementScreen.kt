@@ -93,21 +93,13 @@ fun AnnouncementScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .size(56.dp),
+                    .padding(top = 12.dp, start = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                IconButton(onClick = {
-                    navController.popBackStack()
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBackIosNew,
-                        contentDescription = "back"
-                    )
-                }
                 Text(
                     text = "Announcement",
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                 )
                 IconButton(onClick = {
                     navController.navigate("uploaded_file_screen")
@@ -153,27 +145,28 @@ fun AnnouncementScreen(
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(text = "Upload File")
                 }
+                Spacer(modifier = Modifier.weight(1f))
+                Button(
+                    onClick = {
+                        selectedFileUri?.let { uri ->
+                            viewmodel.uploadFromUri(context, uri)
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = MaterialTheme.shapes.extraLarge,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Purple80
+                    )
+                ) {
+                    Text(
+                        text = "Post Announcement",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
             }
-            Spacer(modifier = Modifier.weight(1f))
-            Button(
-                onClick = {
-                    selectedFileUri?.let { uri ->
-                        viewmodel.uploadFromUri(context, uri)
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = MaterialTheme.shapes.large,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Purple80
-                )
-            ) {
-                Text(
-                    text = "Post Announcement",
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
+
         }
         SnackbarHost(
             hostState = snackbarHostState,
