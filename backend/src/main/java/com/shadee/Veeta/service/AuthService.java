@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,26 +45,35 @@ public class AuthService {
     @Autowired
     private StudentCourseRepository studentCourseRepository;
 
-    public ResponseEntity<LoginResponse> login(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(),
-                        loginRequest.getPassword()
-                )
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String accessToken = jwtUtils.generateJwtToken(authentication);
-        String refreshToken = jwtUtils.generateRefreshToken(authentication);
+    public ResponseEntity<?> login(LoginRequest loginRequest) {
+        try{
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getEmail(),
+                            loginRequest.getPassword()
+                    )
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String accessToken = jwtUtils.generateJwtToken(authentication);
+            String refreshToken = jwtUtils.generateRefreshToken(authentication);
 
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        UserInfo userInfo = new UserInfo(
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                Role.valueOf(userDetails.getAuthorities().iterator().next().getAuthority())
-        );
-        System.out.println(userInfo);
-        return ResponseEntity.ok(new LoginResponse(accessToken, refreshToken, userInfo));
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            UserInfo userInfo = new UserInfo(
+                    userDetails.getId(),
+                    userDetails.getUsername(),
+                    userDetails.getEmail(),
+                    Role.valueOf(userDetails.getAuthorities().iterator().next().getAuthority())
+            );
+            System.out.println(userInfo);
+            return ResponseEntity.ok(new LoginResponse(accessToken, refreshToken, userInfo));
+        }catch (BadCredentialsException e){
+            boolean emailExists = userRepository.existsByEmail(loginRequest.getEmail());
+            if(!emailExists){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Email Not Found"));
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("Incorrect Password"));
+        }
+
     }
 
     public ResponseEntity<SignUpResponse> signUp(SignUpRequest signUpRequest) {
