@@ -1,6 +1,6 @@
 package com.ahseed.veta.screen.admin.recordscreen
 
-import android.R
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,12 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,14 +26,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.ahseed.veta.data.modelclass.StudentListResponse
 
 @Composable
 fun RecordsScreen(
-    viewmodel: RecordViewModel = hiltViewModel()
+    viewmodel: RecordViewModel = hiltViewModel(),
+    navController: NavController
 ){
     LaunchedEffect(Unit) {
-        viewmodel.getAllStudents()
+        viewmodel.getRegisteredStudents()
     }
     val studentList by viewmodel.studentList.collectAsState()
     val sortStudents = studentList.sortedBy { it.remainingHours }
@@ -65,7 +63,12 @@ fun RecordsScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(sortStudents){ student->
-                StudentCard(student)
+                StudentCard(student,
+                    onClick = {
+                        navController.navigate("admin_report_screen/${student.studentId}"){
+                            launchSingleTop = true
+                        }
+                    })
             }
         }
     }
@@ -73,9 +76,16 @@ fun RecordsScreen(
 }
 
 @Composable
-fun StudentCard(student: StudentListResponse) {
+fun StudentCard(
+    student: StudentListResponse,
+    onClick:()-> Unit
+    ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable{
+                onClick()
+            },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(

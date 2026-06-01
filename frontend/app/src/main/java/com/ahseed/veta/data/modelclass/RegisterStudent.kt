@@ -18,6 +18,7 @@ data class RegisterStudentResponse(
 )
 
 data class StudentListResponse(
+    val studentId: String,
     val name: String,
     val email: String,
     val remainingHours: Double,

@@ -6,6 +6,6 @@ import retrofit2.Response
 import retrofit2.http.GET
 
 interface StudentsListApi {
-    @GET("api/admin/get/student-list")
-    suspend fun getAllStudents(): Response<List<StudentListResponse>>
+    @GET("api/admin/registered-students")
+    suspend fun getRegisteredStudents(): Response<List<StudentListResponse>>
 }

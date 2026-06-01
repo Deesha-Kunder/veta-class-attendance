@@ -75,9 +75,11 @@ fun AnnouncementScreen(
                 selectedFileName = ""
 
                 snackbarHostState.showSnackbar("Uploaded successfully")
+                viewmodel.resetUploadState()
             }
             is UploadState.Error ->{
                 snackbarHostState.showSnackbar("Upload Failed")
+                viewmodel.resetUploadState()
             }
             else -> Unit
 

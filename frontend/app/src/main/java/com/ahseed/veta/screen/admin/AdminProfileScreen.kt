@@ -66,12 +66,12 @@ fun AdminProfileScreen(
                 text = "Profile",
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
             )
-            IconButton(onClick = {}) {
-                Icon(
-                    imageVector = Icons.Filled.Edit,
-                    contentDescription = "back"
-                )
-            }
+//            IconButton(onClick = {}) {
+//                Icon(
+//                    imageVector = Icons.Filled.Edit,
+//                    contentDescription = "back"
+//                )
+//            }
         }
         Column(
             modifier = Modifier

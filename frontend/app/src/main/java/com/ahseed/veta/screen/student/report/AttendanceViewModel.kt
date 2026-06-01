@@ -30,7 +30,7 @@ class AttendanceViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _isLoading.value = true
-                attendanceRepo.getSessions()
+                attendanceRepo.getMySessions()
                     .onSuccess {
                         _sessions.value = it
                     }
@@ -44,5 +44,7 @@ class AttendanceViewModel @Inject constructor(
             }
         }
     }
+
+
 
 }

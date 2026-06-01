@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.DateRange
@@ -39,7 +40,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.ahseed.veta.data.modelclass.RegisterStudent
 import com.ahseed.veta.ui.theme.Purple80
 import java.text.SimpleDateFormat
@@ -50,7 +53,8 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterStudentScreen(
-    viewModel: RegisterStudentViewModel = hiltViewModel()
+    viewModel: RegisterStudentViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     val context = LocalContext.current
 
@@ -102,7 +106,11 @@ fun RegisterStudentScreen(
                 )
             )
             IconButton(
-                onClick = {}
+                onClick = {
+                    navController.navigate("registered_students_screen"){
+                        launchSingleTop = true
+                    }
+                }
             ) {
                 Icon(
                     imageVector = Icons.Filled.HowToReg,
@@ -118,8 +126,17 @@ fun RegisterStudentScreen(
         ){
             OutlinedTextField(
                 value = studentName,
-                onValueChange = {studentName = it},
+                onValueChange = {
+                    if (it.all { ch ->
+                            ch.isLetter() || ch.isWhitespace()
+                        }) {
+                        studentName = it
+                    }
+                },
                 label = { Text(text = "Student Name") },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text
+                ),
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp)
             )
@@ -133,22 +150,49 @@ fun RegisterStudentScreen(
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = courseHour,
-                onValueChange = {courseHour = it},
-                label = {Text(text = "Course hour")},
+                onValueChange = {
+                    if (it.all { ch ->
+                            ch.isDigit()
+                        }) {
+                        courseHour = it
+                    }
+                },
+                label = { Text(text = "Course hour") },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                ),
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = profession,
-                onValueChange = {profession = it},
+                onValueChange = {
+                    if (it.all { ch ->
+                            ch.isLetter() || ch.isWhitespace()
+                        }) {
+                        profession = it
+                    }
+                },
                 label = {Text(text = "Profession")},
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text
+                ),
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = batch,
-                onValueChange = {batch = it},
+                onValueChange = {
+                    if (it.all { ch ->
+                            ch.isDigit()
+                        }) {
+                        batch = it
+                    }
+                },
                 label = {Text(text = "Batch")},
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                ),
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))

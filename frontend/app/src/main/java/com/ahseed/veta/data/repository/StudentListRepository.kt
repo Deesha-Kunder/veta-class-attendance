@@ -8,9 +8,9 @@ import javax.inject.Inject
 class StudentListRepository @Inject constructor(
     private val api: StudentsListApi
 ) {
-    suspend fun getAllStudents():Result<List<StudentListResponse>>{
+    suspend fun getRegisteredStudents():Result<List<StudentListResponse>>{
         return try {
-            val res = api.getAllStudents()
+            val res = api.getRegisteredStudents()
             if(res.isSuccessful && res.body() != null){
                 Result.success(res.body()!!)
             }else{

@@ -66,10 +66,10 @@ object NetworkModule {
     @Singleton
     fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-//            .baseUrl("http://10.0.2.2:8080/")
+            .baseUrl("http://10.0.2.2:8080/")
 //            .baseUrl("http://192.168.124.144:8080/")
 //            .baseUrl("172.10.1.124")
-            .baseUrl("https://veta-backend-jzdp.onrender.com/")
+      //      .baseUrl("https://veta-backend-jzdp.onrender.com/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()

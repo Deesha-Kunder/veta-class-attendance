@@ -17,10 +17,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ahseed.veta.screen.admin.AdminProfileScreen
 import com.ahseed.veta.screen.admin.recordscreen.RecordsScreen
-//import com.ahseed.veta.screen.admin.RegisterStudentScreen
 import com.ahseed.veta.screen.admin.announcementscreen.AnnouncementScreen
 import com.ahseed.veta.screen.admin.announcementscreen.UploadedFileScreen
+import com.ahseed.veta.screen.admin.recordscreen.AdminReportScreen
 import com.ahseed.veta.screen.admin.registerStudent.RegisterStudentScreen
+import com.ahseed.veta.screen.admin.registerStudent.RegisteredStudentsScreen
 import com.ahseed.veta.ui.theme.Purple40
 import com.ahseed.veta.ui.theme.Purple80
 
@@ -76,17 +77,22 @@ fun AdminMainScreen(
             startDestination = BottomNavAdminItem.Records.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(route = BottomNavAdminItem.Register.route) { RegisterStudentScreen()}
+            composable(route = BottomNavAdminItem.Register.route) { RegisterStudentScreen(navController = navController)}
             composable(route = BottomNavAdminItem.Announcement.route) {
                 AnnouncementScreen(
                     navController = navController
                 )
             }
-            composable(route = BottomNavAdminItem.Records.route) { RecordsScreen() }
+            composable(route = BottomNavAdminItem.Records.route) { RecordsScreen(navController = navController) }
             composable(route = BottomNavAdminItem.Profile.route) {
                 AdminProfileScreen(navController =  parentNavController)
             }
             composable("uploaded_file_screen") { UploadedFileScreen(navController = navController) }
+            composable ("registered_students_screen") { RegisteredStudentsScreen (navController = navController) }
+            composable("admin_report_screen/{student_id}"){backStackEntry->
+                val studentId = backStackEntry.arguments?.getString("student_id")
+                AdminReportScreen(studentId = studentId)
+            }
 
 
         }

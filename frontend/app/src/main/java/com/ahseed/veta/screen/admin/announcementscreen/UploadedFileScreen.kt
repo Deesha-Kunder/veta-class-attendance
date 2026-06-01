@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.PictureAsPdf
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -76,17 +77,56 @@ fun UploadedFileScreen(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally) {
             when (fileState) {
-                is FileState.Idle -> Text("No files yet")
-                is FileState.Loading -> Text("Loading files")
-                is FileState.Error -> Text("Unable to get the files")
+                is FileState.Idle ->
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No files yet",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                is FileState.Loading ->
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                is FileState.Error ->
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Unable to get the files",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
                 is FileState.Success -> {
 
-                    LazyColumn {
-                        items(materials) { material ->
-                            MaterialRow(
-                                material = material,
-                                onClick = { viewModel.viewFile(material.fileId) }
+                    if (materials.isEmpty()) {
+
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "No files uploaded yet",
+                                style = MaterialTheme.typography.bodyMedium
                             )
+                        }
+
+                    }else{
+
+                        LazyColumn {
+                            items(materials) { material ->
+                                MaterialRow(
+                                    material = material,
+                                    onClick = { viewModel.viewFile(material.fileId) }
+                                )
+                            }
                         }
                     }
                 }
@@ -105,7 +145,7 @@ fun MaterialRow(
             .fillMaxWidth()
             .padding(12.dp)
             .size(80.dp)
-            .background(Color(0xFFF7F8FA), shape = RoundedCornerShape(20.dp))
+            .background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(20.dp))
             .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -131,8 +171,7 @@ fun MaterialRow(
             Spacer(modifier = Modifier.height(5.dp))
             Text(
                 text = getTimeAgo(material.addedAt),
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.DarkGray
+                style = MaterialTheme.typography.bodySmall
             )
         }
     }
@@ -159,7 +198,7 @@ fun MaterialTopBar(onBackClick: () -> Unit) {
         }
         Text(
             text = "Uploaded files",
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
             textAlign = TextAlign.Center
         )
     }

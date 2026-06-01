@@ -37,6 +37,13 @@ class UploadViewmodel @Inject constructor(
     private val _selectedUrl = MutableStateFlow<String?>(null)
     val selectedUrl: StateFlow<String?> = _selectedUrl
 
+    private val _selectedUrlForDownload = MutableStateFlow<String?>(null)
+    val selectedUrlForDownload: StateFlow<String?> = _selectedUrlForDownload
+
+    fun resetUploadState(){
+        _uploadState.value = UploadState.Idle
+    }
+
     fun uploadFromUri(context: Context, uri: Uri) {
         viewModelScope.launch {
             try {
@@ -89,5 +96,14 @@ class UploadViewmodel @Inject constructor(
     }
     fun cleanSelectedFleUrl(){
         _selectedUrl.value = null
+    }
+    fun setSelectedUrl(fileId: String) {
+        viewModelScope.launch {
+            val response = repository.getFileByFileFromID(fileId)
+            response.fold(
+                onSuccess = { _selectedUrlForDownload.value = it.url },
+                onFailure = { _selectedUrlForDownload.value = null }
+            )
+        }
     }
 }

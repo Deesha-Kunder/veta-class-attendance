@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.ahseed.veta.data.modelclass.MaterialItem
 import com.ahseed.veta.data.repository.UploadRepository
 import com.ahseed.veta.screen.admin.announcementscreen.FileState
+import com.ahseed.veta.sharedpreferences.AuthPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MaterialStudentViewModel @Inject constructor(
-    private val repository: UploadRepository
+    private val repository: UploadRepository,
+    private val prefs: AuthPrefs
 ) : ViewModel() {
     private val _materials = MutableStateFlow<List<MaterialItem>>(emptyList())
     val materials: StateFlow<List<MaterialItem>> = _materials
@@ -30,7 +32,24 @@ class MaterialStudentViewModel @Inject constructor(
     val selectedUrlForDownload: StateFlow<String?> = _selectedUrlForDownload
 
     init {
-        getAllFiles()
+        getFilesByAdminId()
+    }
+
+    fun getFilesByAdminId() {
+        viewModelScope.launch {
+            _fileState.value = FileState.Loading
+            val adminId = prefs.getUserId() ?: ""
+            val response = repository.getFilesByAdminId(adminId)
+            response.fold(
+                onSuccess = {
+                    _materials.value = it
+                    _fileState.value = FileState.Success(it)
+                },
+                onFailure = {
+                    _fileState.value = FileState.Error(it.message ?: "File fetching error")
+                }
+            )
+        }
     }
 
     fun getAllFiles() {
