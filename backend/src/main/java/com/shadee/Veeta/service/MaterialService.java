@@ -2,7 +2,9 @@ package com.shadee.Veeta.service;
 
 import com.shadee.Veeta.dto.UploadResponse;
 import com.shadee.Veeta.modelclass.Material;
+import com.shadee.Veeta.modelclass.Student;
 import com.shadee.Veeta.repository.MaterialRepository;
+import com.shadee.Veeta.repository.StudentRegisterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +19,7 @@ import java.util.UUID;
 public class MaterialService {
     private final MaterialRepository repository;
     private final SupabaseStorageService supabaseService;
+    private final StudentRegisterRepository studentRepository;
 
     public UploadResponse uploadAndSave(MultipartFile file, String uploadedBy) throws IOException, InterruptedException {
         String fileId = UUID.randomUUID().toString();
@@ -53,7 +56,11 @@ public class MaterialService {
                 .orElseThrow(() -> new RuntimeException("File not found"));
         return supabaseService.generateSignedURL(material.getFilePath(), 1800);
     }
-    public List<Material> getAllFiles(){
-        return repository.findAllByOrderByAddedAtDesc();
+    public List<Material> getAllFiles(String email){
+        Student student =  studentRepository.findByEmail(email)
+                .orElseThrow(()-> new RuntimeException("Student not found"));
+        String registeredBy = student.getRegisteredBy();
+
+        return repository.findByUploadedByOrderByAddedAtDesc(registeredBy);
     }
 }

@@ -1,9 +1,11 @@
 package com.shadee.Veeta.controller;
 
 import com.shadee.Veeta.dto.UploadResponse;
+import com.shadee.Veeta.security.CustomUserDetails;
 import com.shadee.Veeta.service.MaterialService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,9 +60,11 @@ public class MaterialController {
         }
     }
     @GetMapping("/student/materials")
-    public ResponseEntity<?> getFiles(){
+    public ResponseEntity<?> getFiles(Authentication authentication){
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String email = userDetails.getEmail();
         try{
-            return ResponseEntity.ok(service.getAllFiles());
+            return ResponseEntity.ok(service.getAllFiles(email));
         }catch (Exception e){
             return ResponseEntity.internalServerError().body("Error fetching files");
         }
