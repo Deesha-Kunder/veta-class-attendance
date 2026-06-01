@@ -24,7 +24,7 @@ public class StudentRegisterService {
     public Student RegisterStudent(StudentRegisterRequest student, String adminId) {
         System.out.println(student);
         if (repository.existsByEmail(student.getEmail())) {
-            throw new RuntimeException("Student already exist with this email");
+            throw new RuntimeException("Student already exists with this email");
         }
 
         Student newStudent = new Student();

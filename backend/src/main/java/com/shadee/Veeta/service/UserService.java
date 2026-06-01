@@ -26,7 +26,7 @@ public class UserService {
         Users users = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("user not found"));
 
         if(users.getStudent() == null){
-            throw new RuntimeException("user is not student");
+            throw new RuntimeException("This user is not a student");
         }
         return users.getStudent();
     }

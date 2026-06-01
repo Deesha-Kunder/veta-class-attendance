@@ -45,7 +45,7 @@ public class FaceService {
     public Map<String, Object> recognizeFace(String studentId, RecognizeRequest request){
 
         FaceEmbedding stored = repository.findByStudentId(studentId)
-                .orElseThrow(()->new RuntimeException("Face not registered"));
+                .orElseThrow(()->new RuntimeException("No registered face found"));
 
         System.out.println("calculating score");
         float score = cosineSimilarity(
@@ -53,7 +53,7 @@ public class FaceService {
                 request.getEmbedding()
         );
         if (score > 0.7f) {
-            System.out.println("found now returning the result");
+            System.out.println("returning the result");
             return Map.of(
                     "studentId",stored.getStudentId(),
                     "studentName",stored.getName(),
@@ -61,7 +61,7 @@ public class FaceService {
                     "status","VERIFIED"
             );
         }
-        throw new RuntimeException("Face does not Recognized");
+        throw new RuntimeException("Unable to recognize face");
     }
     private float cosineSimilarity(List<Float> a, List<Float> b){
         float dot = 0f;

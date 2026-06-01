@@ -100,7 +100,7 @@ public class AuthService {
     public ResponseEntity<SignUpResponse> signUp(SignUpRequest signUpRequest) {
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new SignUpResponse("email already exist",null));
+                    .body(new SignUpResponse("Email already exists",null));
         }
         Users user = new Users();
         user.setUsername(signUpRequest.getUsername());
@@ -116,7 +116,7 @@ public class AuthService {
             if(student.isEmpty()){
                 return ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)
-                        .body(new SignUpResponse("Student email is not found in Student records",null));
+                        .body(new SignUpResponse("Student email not found in records",null));
             }
             studentData = student.get();
             user.setStudent(studentData);
@@ -141,7 +141,7 @@ public class AuthService {
                 savedUser.getRole()
         );
         System.out.println(userInfo);
-        return ResponseEntity.ok(new SignUpResponse("Registered Successfully",userInfo));
+        return ResponseEntity.ok(new SignUpResponse("Sign-up successfully",userInfo));
 
     }
     public RefreshTokenResponse refreshToken(RefreshTokenRequest refreshTokenResponse){

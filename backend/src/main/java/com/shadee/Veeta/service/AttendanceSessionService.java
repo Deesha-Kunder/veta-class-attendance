@@ -23,6 +23,7 @@ public class AttendanceSessionService {
     private StudentCourseRepository studentCourseRepository;
 
     public Map<String,Object> markAttendance(String studentId, int courseId){
+
         System.out.println("STEP 1");
         AttendanceSession openSession = attendanceSessionRepository.findTopByStudentIdAndDateAndCheckOutTimeIsNull(studentId, LocalDate.now())
                 .orElse(null);
@@ -42,10 +43,10 @@ public class AttendanceSessionService {
             session.setDate(LocalDate.now());
 
             attendanceSessionRepository.save(session);
-            System.out.println("CHECKIN SAVED");
+            System.out.println("Entry Time SAVED");
             return Map.of(
-                    "type","CHECK-IN",
-                    "message","Checked in successfully",
+                    "type","Entry",
+                    "message","Entry recorded successfully",
                     "time",session.getCheckInTime()
             );
         }
@@ -58,7 +59,7 @@ public class AttendanceSessionService {
 
             openSession.setDurationMinutes(duration);
             attendanceSessionRepository.save(openSession);
-            System.out.println("CHECKOUT SAVED");
+            System.out.println("Exit Time SAVED");
 
             //update the progress
 
@@ -70,19 +71,19 @@ public class AttendanceSessionService {
             System.out.println("STUDENT COURSE UPDATED");
 
             return Map.of(
-                    "type","CHECK-OUT",
-                    "message","Checked out successfully",
+                    "type","Exit",
+                    "message","Exit recorded successfully",
                     "time",openSession.getCheckOutTime()
             );
         }
         throw new RuntimeException(
-                "Attendance already completed for today"
+                "Attendance already recorded for today"
         );
     }
     public AttendanceResponse getAttendanceSession(String studentId){
         List<AttendanceSession>sessions = attendanceSessionRepository.findByStudentIdOrderByDateDesc(studentId);
         if(sessions.isEmpty()){
-            throw new RuntimeException("No Session found");
+            throw new RuntimeException("No Sessions found");
         }
         StudentCourse sc = studentCourseRepository.findByStudentId(studentId);
         Long completed = sc.getTotalCompletedMinutes();

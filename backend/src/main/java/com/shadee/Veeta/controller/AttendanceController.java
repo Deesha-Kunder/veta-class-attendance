@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
@@ -22,6 +23,8 @@ public class AttendanceController {
 
     @GetMapping("/my-session")
     public ResponseEntity<?> getSessions(Authentication authentication){
+        System.out.println("Current Time = " + LocalDateTime.now());
+        System.out.println("Zone = " + java.time.ZoneId.systemDefault());
         try{
             CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
             String id = customUserDetails.getId();

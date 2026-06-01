@@ -36,7 +36,7 @@ public class FaceController {
         return ResponseEntity.ok(
                 Map.of(
                         "success", true,
-                        "message", isNew ? "Face registered" : "Face updated"
+                        "message", isNew ? "Face registration successful" : "Face updated successfully"
                 )
         );
     }

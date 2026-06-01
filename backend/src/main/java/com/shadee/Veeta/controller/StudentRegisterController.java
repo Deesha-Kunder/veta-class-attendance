@@ -30,7 +30,7 @@ public class StudentRegisterController {
             Student student = service.RegisterStudent(request, adminId);
             Map<String,Object> response = new HashMap<>();
             response.put("success",true);
-            response.put("message","Student registered successfully");
+            response.put("message","Student registration successful");
             response.put("user_data",student);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -43,7 +43,7 @@ public class StudentRegisterController {
 
             Map<String,Object> response = new HashMap<>();
             response.put("success", false);
-            response.put("message", "Failed to register student");
+            response.put("message", "Student registration failed");
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(response);
