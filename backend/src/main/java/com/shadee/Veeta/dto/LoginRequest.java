@@ -1,5 +1,6 @@
 package com.shadee.Veeta.dto;
 
+import com.shadee.Veeta.modelclass.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class LoginRequest {
     String email;
     String password;
-    String role;
+    Role role;
 }

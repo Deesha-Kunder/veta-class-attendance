@@ -3,10 +3,12 @@ package com.shadee.Veeta.controller;
 import com.shadee.Veeta.dto.StudentListResponse;
 import com.shadee.Veeta.dto.StudentRegisterRequest;
 import com.shadee.Veeta.modelclass.Student;
+import com.shadee.Veeta.security.CustomUserDetails;
 import com.shadee.Veeta.service.StudentRegisterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -21,26 +23,40 @@ public class StudentRegisterController {
     private final StudentRegisterService service;
 
     @PostMapping("/register-student")
-    public ResponseEntity<?> registerStudent(@RequestBody StudentRegisterRequest request){
+    public ResponseEntity<?> registerStudent(@RequestBody StudentRegisterRequest request, Authentication authentication){
+        CustomUserDetails customUserDetails =(CustomUserDetails) authentication.getPrincipal();
+        String adminId = customUserDetails.getId();
         try{
-            Student student = service.RegisterStudent(request);
+            Student student = service.RegisterStudent(request, adminId);
             Map<String,Object> response = new HashMap<>();
             response.put("success",true);
             response.put("message","Student registered successfully");
             response.put("user_data",student);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        }catch (Exception e){
+        }catch (RuntimeException e){
             Map<String,Object> errorResponse = new HashMap<>();
             errorResponse.put("success",false);
-            errorResponse.put("message","Failed to register");
+            errorResponse.put("message",e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }catch (Exception e) {
+
+            Map<String,Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Failed to register student");
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(response);
         }
 
     }
-    @GetMapping("/get/student-list")
-    public ResponseEntity<List<StudentListResponse>> getAllStudents(){
-        List<StudentListResponse> students = service.getAllStudents();
+
+    //gets the students only registered by admin
+    @GetMapping("/registered-students")
+    public ResponseEntity<List<StudentListResponse>> getRegisteredStudents(Authentication authentication){
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        String userId = customUserDetails.getId();
+        List<StudentListResponse> students = service.getRegisteredStudents(userId);
         return ResponseEntity.ok(students);
     }
 }

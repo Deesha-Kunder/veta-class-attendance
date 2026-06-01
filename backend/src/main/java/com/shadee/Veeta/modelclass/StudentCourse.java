@@ -14,9 +14,14 @@ public class StudentCourse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String studentId;
+    @Column(nullable = false)
     private int courseId;
+    @Column(nullable = false)
     private String emailId;
-    private Long totalCompletedMinutes;
-    private Long requiredMinutes;
+    @Column(nullable = false)
+    private Long totalCompletedMinutes = 0L;
+    @Column(nullable = false)
+    private Long requiredMinutes = 0L;
 }

@@ -27,4 +27,6 @@ public class Student {
     String profession;
     @Column(nullable = false)
     LocalDate joinedDate;
+    @Column(name = "registered_by", nullable = false)
+    private String registeredBy;
 }

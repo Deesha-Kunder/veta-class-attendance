@@ -21,7 +21,7 @@ public class StudentRegisterService {
     private final StudentCourseRepository studentCourseRepository;
 
     @Transactional
-    public Student RegisterStudent(StudentRegisterRequest student) {
+    public Student RegisterStudent(StudentRegisterRequest student, String adminId) {
         System.out.println(student);
         if (repository.existsByEmail(student.getEmail())) {
             throw new RuntimeException("Student already exist with this email");
@@ -34,6 +34,14 @@ public class StudentRegisterService {
         newStudent.setBatch(student.getBatch());
         newStudent.setCourseHour(student.getCourseHour());
         newStudent.setJoinedDate(student.getJoinedDate());
+        newStudent.setRegisteredBy(adminId);
+
+        StudentCourse sc = new StudentCourse();
+        sc.setEmailId(newStudent.getEmail());
+        sc.setCourseId(1);
+
+        sc.setRequiredMinutes(newStudent.getCourseHour()* 60L);
+        studentCourseRepository.save(sc);
 
         return repository.save(newStudent);
     }
@@ -46,20 +54,25 @@ public class StudentRegisterService {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public List<StudentListResponse> getAllStudents() {
+    public List<StudentListResponse> getRegisteredStudents(String userId) {
 
-        List<Student> students = repository.findAll();
+        List<Student> students = repository.findByRegisteredBy(userId);
 
         return students.stream().map(student -> {
 
             StudentCourse sc =
                     studentCourseRepository.findByEmailId(student.getEmail());
 
+            System.out.println("Student Email: " + student.getEmail());
+            System.out.println("StudentCourse: " + sc);
+
             double remainingHours = 0;
             double completedHours = 0;
+            String id = "";
 
             if (sc != null) {
 
+                id = sc.getStudentId();
                 Long completed = sc.getTotalCompletedMinutes();
                 Long required = sc.getRequiredMinutes();
 
@@ -70,6 +83,7 @@ public class StudentRegisterService {
             }
 
             return new StudentListResponse(
+                    id,
                     student.getName(),
                     student.getEmail(),
                     remainingHours,

@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class StudentListResponse {
+    private String studentId;
     private String name;
     private String email;
     private Double remainingHour;

@@ -43,7 +43,7 @@ public class AuthService {
     StudentRegisterRepository studentRegisterRepository;
 
     @Autowired
-    private StudentCourseRepository studentCourseRepository;
+    StudentCourseRepository studentCourseRepository;
 
     public ResponseEntity<?> login(LoginRequest loginRequest) {
         try{
@@ -53,11 +53,32 @@ public class AuthService {
                             loginRequest.getPassword()
                     )
             );
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+            Role role = Role.valueOf(
+                    userDetails
+                            .getAuthorities()
+                            .iterator()
+                            .next()
+                            .getAuthority());
+
+            System.out.println("DB Role = " + role);
+            System.out.println("Request Role = " + loginRequest.getRole());
+            System.out.println(role.equals(loginRequest.getRole()));
+
+            if(!role.equals(loginRequest.getRole())){
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(new ErrorResponse("User not found"));
+            }
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
             String accessToken = jwtUtils.generateJwtToken(authentication);
             String refreshToken = jwtUtils.generateRefreshToken(authentication);
 
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+
             UserInfo userInfo = new UserInfo(
                     userDetails.getId(),
                     userDetails.getUsername(),
