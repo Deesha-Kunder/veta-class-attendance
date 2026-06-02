@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,7 +40,7 @@ public class AttendanceSessionService {
             AttendanceSession session = new AttendanceSession();
             session.setStudentId(studentId);
             session.setCourseId(courseId);
-            session.setCheckInTime(LocalDateTime.now());
+            session.setCheckInTime(Instant.now());
             session.setDate(LocalDate.now());
 
             attendanceSessionRepository.save(session);
@@ -52,7 +53,7 @@ public class AttendanceSessionService {
         }
         if(openSession.getCheckOutTime  () == null){
             System.out.println("UPDATING CHECKOUT");
-            LocalDateTime time = LocalDateTime.now();
+            Instant time = Instant.now();
             openSession.setCheckOutTime(time);
 
             long duration = Duration.between(openSession.getCheckInTime(), time).toMinutes();

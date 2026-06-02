@@ -7,6 +7,7 @@ import com.shadee.Veeta.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -30,8 +31,8 @@ public class StatusService {
 
         boolean checkIn = false;
         boolean checkOut = false;
-        LocalDateTime checkInTime= null;
-        LocalDateTime checkOutTime= null;
+        Instant checkInTime= null;
+        Instant checkOutTime= null;
 
 
         if(attendance.isPresent()){
