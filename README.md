@@ -1,6 +1,6 @@
 # VETA Class Attendance
 
-A facial recognition-based attendance and course-hour management system designed for institutes that offer flexible, hour-based learning programs. The application automates attendance tracking, course-hour calculation, and learning material management while providing dedicated dashboards for both students and administrators.
+A facial recognition-based **Android mobile application** for attendance and course-hour management system designed for institutes that offer flexible, hour-based learning programs. The application automates attendance tracking, course-hour calculation, and learning material management while providing dedicated dashboards for both students and admini.
 
 ---
 
