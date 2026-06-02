@@ -48,7 +48,7 @@ class FaceViewModel @Inject constructor(
                     Log.d("FaceViewModel","Student status fetched")
                 }
                 response.onFailure {
-                    Log.e("FaceViewModel error","Failed to fetch student status")
+                    Log.e("FaceViewModel error","Failed to load student status")
                 }
             }finally {
                 _isLoading.value = false
@@ -91,11 +91,11 @@ class FaceViewModel @Inject constructor(
             try{
                 val response = faceRepository.recognizeFace(request)
                     .onSuccess {
-                        _message.value = "Marked attendance"
+                        _message.value = "Attendance marked successfully"
                         getStudentStatus()
                     }
                     .onFailure {
-                        _message.value = "Failed to mark attendance"
+                        _message.value = it.message
                     }
             }catch (e:Exception){
                 Log.e("FaceViewModel","Error while recognizing face")

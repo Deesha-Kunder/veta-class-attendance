@@ -14,7 +14,7 @@ class OnboardingRepository @Inject constructor(
             if(response.isSuccessful && response.body() != null){
                 Result.success(response.body()!!)
             }else{
-                Result.failure(Exception("Failed to fetch the Admin's data ${response.message()}"))
+                Result.failure(Exception("Failed to load admin data ${response.message()}"))
             }
         }catch (e: Exception){
             Result.failure(e)
@@ -26,7 +26,7 @@ class OnboardingRepository @Inject constructor(
             if(response.isSuccessful && response.body() != null){
                 Result.success(response.body()!!)
             }else{
-                Result.failure(Exception("Failed to fetch the student's data ${response.message()}"))
+                Result.failure(Exception("Failed to load student data ${response.message()}"))
             }
         }catch (e: Exception){
             Result.failure(e)

@@ -38,10 +38,10 @@ class RegisterStudentViewModel @Inject constructor(
             try {
                 val response = repository.registerStudent(request)
                 response.onSuccess {
-                    _uiMessage.emit("Registered Successfully")
+                    _uiMessage.emit("Registration successful")
                 }
                     .onFailure {
-                        _uiMessage.emit(it.message?:"Failed! try again")
+                        _uiMessage.emit(it.message?:"Failed. Please try again")
                     }
             } catch (e: Exception) {
                 _uiMessage.emit("Something went wrong")
@@ -59,7 +59,7 @@ class RegisterStudentViewModel @Inject constructor(
                     _studentList.value = it
                 }
                 res.onFailure {
-                    Log.e("RecordViewModel","failed to fetch student list")
+                    Log.e("RecordViewModel","failed to load student list")
                 }
             }finally {
                 _loading.value = false

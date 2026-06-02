@@ -14,7 +14,7 @@ class StudentListRepository @Inject constructor(
             if(res.isSuccessful && res.body() != null){
                 Result.success(res.body()!!)
             }else{
-                Result.failure(Exception("failed to fetch the student list ${res.message()}"))
+                Result.failure(Exception("failed to load student list ${res.message()}"))
             }
         }catch (e: Exception){
             Result.failure(e)

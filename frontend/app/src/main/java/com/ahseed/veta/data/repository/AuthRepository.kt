@@ -49,7 +49,7 @@ class AuthRepository @Inject constructor(
             }catch (e: Exception){
                 null
             }
-            Result.failure(Exception(errorResponse?.message?:"Login Failed"))
+            Result.failure(Exception(errorResponse?.message?:"Login Failed. Please try again"))
         }
     }
 
@@ -67,7 +67,7 @@ class AuthRepository @Inject constructor(
             }catch (e: Exception){
                 null
             }
-            Result.failure(Exception(errorResponse?.message?:"Signup Failed"))
+            Result.failure(Exception(errorResponse?.message?:"Signup Failed. Please try again"))
         }
     }
 

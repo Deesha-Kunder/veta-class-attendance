@@ -29,7 +29,7 @@ class ProfileViewModel @Inject constructor(
             result.onSuccess { response ->
                 _adminProfile.value = response
             }.onFailure {
-                Log.e("AdminProfileViewModel", "Failed to fetch admin profile: ${it.message}")
+                Log.e("AdminProfileViewModel", "Failed to fetch admin data: ${it.message}")
             }
         }
     }
@@ -41,7 +41,7 @@ class ProfileViewModel @Inject constructor(
                 _studentProfile.value = response
             }.onFailure {
                 Log.e(
-                    "StudentProfileViewModel", "Failed to fetch student profile: ${it.message}"
+                    "StudentProfileViewModel", "Failed to fetch student data: ${it.message}"
                 )
             }
         }

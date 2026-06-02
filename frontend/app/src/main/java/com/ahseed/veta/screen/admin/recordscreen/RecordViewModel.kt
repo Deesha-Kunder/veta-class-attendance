@@ -41,7 +41,7 @@ class RecordViewModel @Inject constructor(
                     _studentList.value = it
                 }
                 res.onFailure {
-                    Log.e("RecordViewModel","failed to fetch student list")
+                    Log.e("RecordViewModel","Unable to load student list")
                 }
             }
         }finally {
@@ -62,7 +62,7 @@ class RecordViewModel @Inject constructor(
                         _message.value = it.message
                     }
             } catch (e: Exception){
-                Log.e("AttendanceViewModel","Error while fetching teh attendance session")
+                Log.e("AttendanceViewModel","Unable to load attendance sessions")
             }finally {
                 _isLoading.value = false
             }

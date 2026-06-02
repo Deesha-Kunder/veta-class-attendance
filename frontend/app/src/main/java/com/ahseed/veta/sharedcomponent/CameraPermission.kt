@@ -62,13 +62,13 @@ fun PermissionScreen(
     ){
         Text(
             text = "Camera permission is required to continue",
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.labelLarge
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onRequestPermission) {
             Text(
                 text = "Grant Permission",
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleSmall
             )
         }
     }

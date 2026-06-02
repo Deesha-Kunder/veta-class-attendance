@@ -38,7 +38,7 @@ class AttendanceViewModel @Inject constructor(
                         _message.value = it.message
                     }
             } catch (e: Exception){
-                Log.e("AttendanceViewModel","Error while fetching teh attendance session")
+                Log.e("AttendanceViewModel","Error while fetching teh attendance sessions")
             }finally {
                 _isLoading.value = false
             }

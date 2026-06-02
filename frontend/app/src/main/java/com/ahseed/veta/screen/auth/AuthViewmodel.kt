@@ -95,8 +95,8 @@ class AuthViewmodel @Inject constructor(
             }
             result.onFailure {
                 Log.e("AuthViewModel", "Login failed", it)
-                _loginState.value = LoginUiState.Error(it.message ?: "Login failed")
-                _uiEvent.emit(UiEvent.ShowToast(it.message ?: "login failed"))
+                _loginState.value = LoginUiState.Error(it.message ?: "Login failed. Please try again")
+                _uiEvent.emit(UiEvent.ShowToast(it.message ?: "login failed. Please try again"))
             }
         }
     }
@@ -142,8 +142,8 @@ class AuthViewmodel @Inject constructor(
             }
             result.onFailure {
                 Log.e("AuthViewModel", "signup failed", it)
-                _signupState.value = SignUpUiState.Error(it.message ?: "Signup failed")
-                _uiEvent.emit(UiEvent.ShowToast(it.message ?: "Signup failed"))
+                _signupState.value = SignUpUiState.Error(it.message ?: "Signup failed. Please try again")
+                _uiEvent.emit(UiEvent.ShowToast(it.message ?: "Signup failed. Please try again"))
             }
         }
     }

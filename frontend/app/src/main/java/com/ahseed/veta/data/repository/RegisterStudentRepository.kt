@@ -24,7 +24,7 @@ class RegisterStudentRepository @Inject constructor(
                         ErrorResponse::class.java
                     ).message
                 }catch (e: Exception){
-                    "Failed try again"
+                    "Failed. Please try again"
                 }
                 Result.failure(Exception(message))
             }

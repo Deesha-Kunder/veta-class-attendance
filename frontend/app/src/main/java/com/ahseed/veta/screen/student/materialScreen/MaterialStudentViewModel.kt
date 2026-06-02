@@ -32,7 +32,7 @@ class MaterialStudentViewModel @Inject constructor(
     val selectedUrlForDownload: StateFlow<String?> = _selectedUrlForDownload
 
     init {
-        getFilesByAdminId()
+        getAllFiles()
     }
 
     fun getFilesByAdminId() {

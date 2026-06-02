@@ -248,7 +248,7 @@ fun ReportScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "No session found",
+                            text = "No sessions found",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -289,12 +289,12 @@ fun ReportScreen(
                                         )
 
                                         Text(
-                                            text = "Check-in : ${formatTime(item.checkInTime)}",
+                                            text = "Entry Time : ${formatTime(item.checkInTime)}",
                                             style = MaterialTheme.typography.bodyMedium
                                         )
 
                                         Text(
-                                            text = "Check-out : ${formatTime(item.checkOutTime)}",
+                                            text = "Exit Time : ${formatTime(item.checkOutTime)}",
                                             style = MaterialTheme.typography.bodyMedium
                                         )
                                     }

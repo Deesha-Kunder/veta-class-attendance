@@ -123,7 +123,6 @@ fun StudentItem(
             .padding(  10.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors( MaterialTheme.colorScheme.surface)
     ) {
 
         Column(

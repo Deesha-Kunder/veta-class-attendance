@@ -12,9 +12,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +33,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.ahseed.veta.ui.theme.primary
 import com.ahseed.veta.utils.formatDate
 import com.ahseed.veta.utils.formatTime
@@ -48,6 +53,7 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun AdminReportScreen(
+    navController: NavController,
     studentId: String?,
     viewModel: RecordViewModel = hiltViewModel()
 ) {
@@ -105,16 +111,25 @@ fun AdminReportScreen(
             .fillMaxSize()
             .padding(8.dp)
     ) {
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp),
-
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            IconButton(
+                onClick = { navController.popBackStack() }
             ) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBackIosNew,
+                    contentDescription = "back"
+                )
+            }
             Text(
                 text = "Report Screen",
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
             )
+
         }
         Column(
             modifier = Modifier
@@ -250,7 +265,7 @@ fun AdminReportScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "No session found",
+                            text = "No sessions found",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -291,12 +306,12 @@ fun AdminReportScreen(
                                         )
 
                                         Text(
-                                            text = "Check-in : ${formatTime(item.checkInTime)}",
+                                            text = "Entry Time : ${formatTime(item.checkInTime)}",
                                             style = MaterialTheme.typography.bodyMedium
                                         )
 
                                         Text(
-                                            text = "Check-out : ${formatTime(item.checkOutTime)}",
+                                            text = "Exit Time : ${formatTime(item.checkOutTime)}",
                                             style = MaterialTheme.typography.bodyMedium
                                         )
                                     }

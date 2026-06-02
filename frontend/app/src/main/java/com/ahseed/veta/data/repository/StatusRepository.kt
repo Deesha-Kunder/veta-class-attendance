@@ -13,7 +13,7 @@ class StatusRepository @Inject constructor(
             if(response.isSuccessful && response.body() != null){
                 Result.success(response.body()!!)
             }else{
-                Result.failure(Exception("Failed to get student status"))
+                Result.failure(Exception("Failed to load student status"))
 
             }
         }catch (e: Exception){

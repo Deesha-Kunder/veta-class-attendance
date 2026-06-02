@@ -4,10 +4,12 @@ import android.util.Log
 import java.sql.Date
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
+import kotlin.time.Instant
 
 fun getTimeAgo(timestamp: String): String {
     return try {
@@ -44,20 +46,34 @@ fun getTimeAgo(timestamp: String): String {
 
 fun formatDateTime(dateTime:String?):String{
     if(dateTime == null) return ""
-    val parsed = LocalDateTime.parse(dateTime)
-    val formatter = DateTimeFormatter.ofPattern(
-        "dd MMM yyyy hh:mm a"
-    )
-    return parsed.format(formatter);
+
+
+    return try {
+        val instant = java.time.Instant.parse(dateTime)
+
+        val localDateTime = instant.atZone(
+            ZoneId.systemDefault()
+        )
+
+        localDateTime.format(
+            DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a")
+        )
+    } catch (e: Exception) {
+        dateTime
+    }
 }
 
 fun formatTime(dateTime: String?): String {
     if (dateTime == null) return "--"
 
     return try {
-        val parsed = LocalDateTime.parse(dateTime)
-        val formatter = DateTimeFormatter.ofPattern("hh:mm a")
-        parsed.format(formatter)
+        val instant = java.time.Instant.parse(dateTime)
+        val localTime = instant.atZone(
+            java.time.ZoneId.systemDefault()
+        )
+        localTime.format(
+            DateTimeFormatter.ofPattern("hh:mm a")
+        )
     } catch (e: Exception) {
         dateTime
     }
@@ -67,9 +83,13 @@ fun formatDate(dateTime: String?): String {
     if (dateTime == null) return "--"
 
     return try {
-        val parsed = LocalDateTime.parse(dateTime)
-        val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
-        parsed.format(formatter)
+        val instant = java.time.Instant.parse(dateTime)
+        val localTime = instant.atZone(
+            java.time.ZoneId.systemDefault()
+        )
+        localTime.format(
+            DateTimeFormatter.ofPattern("ddd MMM yyyy")
+        )
     } catch (e: Exception) {
         dateTime
     }

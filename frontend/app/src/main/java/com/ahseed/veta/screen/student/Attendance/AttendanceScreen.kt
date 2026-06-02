@@ -159,8 +159,8 @@ fun MarkAttendance(
         Spacer(modifier = Modifier.height(16.dp))
         val displayMessage = when{
             status?.faceRegistered == false-> "Please register your face first"
-            status?.checkOut == true -> "Already checked out"
-            status?.checkIn == true -> "Already checked in"
+            status?.checkOut == true -> "Exit already recorded"
+            status?.checkIn == true -> "Entry already recorded"
             message != null -> message!!
             else->"Align your face within frame"
         }
@@ -172,14 +172,14 @@ fun MarkAttendance(
         )
         status?.checkInTime?.let {
             Text(
-                text = "Check In : ${formatDateTime(it)}",
+                text = "Entry Time: ${formatDateTime(it)}",
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center
             )
         }
         status?.checkOutTime?.let {
             Text(
-                text = "Check Out : ${formatDateTime(it)}",
+                text = "Exit Time: ${formatDateTime(it)}",
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center
             )
@@ -199,7 +199,7 @@ fun MarkAttendance(
                     viewModel.recognizeFace(
                         FaceRecognizeRequest(embedding.toList())
                     )
-                    isProcessing = true
+                    isProcessing = false
                 }
 
             },

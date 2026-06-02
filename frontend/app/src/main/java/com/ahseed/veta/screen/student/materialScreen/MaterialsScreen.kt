@@ -264,7 +264,7 @@ fun MaterialTopBar(onBackClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 12.dp, start = 16.dp),
+            .padding(18.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -272,11 +272,11 @@ fun MaterialTopBar(onBackClick: () -> Unit) {
             text = "Materials",
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
         )
-        IconButton(onClick = {}) {
-            Icon(
-                imageVector = Icons.Filled.DownloadForOffline,
-                contentDescription = "Downloaded"
-            )
-        }
+//        IconButton(onClick = {}) {
+//            Icon(
+//                imageVector = Icons.Filled.DownloadForOffline,
+//                contentDescription = "Downloaded"
+//            )
+//        }
     }
 }

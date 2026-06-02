@@ -91,7 +91,9 @@ fun AdminMainScreen(
             composable ("registered_students_screen") { RegisteredStudentsScreen (navController = navController) }
             composable("admin_report_screen/{student_id}"){backStackEntry->
                 val studentId = backStackEntry.arguments?.getString("student_id")
-                AdminReportScreen(studentId = studentId)
+                AdminReportScreen(
+                    navController = navController,
+                    studentId = studentId)
             }
 
 

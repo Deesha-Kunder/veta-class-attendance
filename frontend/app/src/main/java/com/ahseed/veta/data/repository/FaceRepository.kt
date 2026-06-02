@@ -1,10 +1,12 @@
 package com.ahseed.veta.data.repository
 
 import com.ahseed.veta.data.interfaces.FaceApi
+import com.ahseed.veta.data.modelclass.ErrorResponse
 import com.ahseed.veta.data.modelclass.FaceRecognizeRequest
 import com.ahseed.veta.data.modelclass.FaceRecognizeResponse
 import com.ahseed.veta.data.modelclass.FaceRegister
 import com.ahseed.veta.data.modelclass.FaceRegisterResponse
+import com.google.gson.Gson
 import jakarta.inject.Inject
 
 class FaceRepository @Inject constructor(
@@ -16,7 +18,7 @@ class FaceRepository @Inject constructor(
             if(response.isSuccessful && response.body() != null){
                 Result.success(response.body()!!)
             }else{
-                Result.failure(Exception("Failed to register face ${response.message()}"))
+                Result.failure(Exception("Registration failed ${response.message()}"))
             }
         }catch (e: Exception){
             Result.failure(e)
@@ -28,7 +30,16 @@ class FaceRepository @Inject constructor(
             if(response.isSuccessful && response.body() != null){
                 Result.success(response.body()!!)
             }else{
-                Result.failure(Exception("Failed to register face ${response.message()}"))
+                val errorBody = response.errorBody()?.string()
+                val msg = try{
+                    Gson().fromJson(
+                        errorBody,
+                        ErrorResponse::class.java
+                    ).message
+                }catch (e: Exception){
+                    "Failed? try again"
+                }
+                Result.failure(Exception(msg))
             }
         }catch (e: Exception){
             Result.failure(e)

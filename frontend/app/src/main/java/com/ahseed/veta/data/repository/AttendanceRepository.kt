@@ -2,7 +2,6 @@ package com.ahseed.veta.data.repository
 
 import com.ahseed.veta.data.interfaces.AttendanceApi
 import com.ahseed.veta.data.modelclass.AttendanceResponse
-import com.ahseed.veta.data.modelclass.AttendanceSession
 import javax.inject.Inject
 
 class AttendanceRepository @Inject constructor(
@@ -16,7 +15,7 @@ class AttendanceRepository @Inject constructor(
             } else {
 
                 Result.failure(
-                    Exception("No attendance sessions found")
+                    Exception("No active attendance session found")
                 )
             }
         } catch (e: Exception) {
@@ -31,7 +30,7 @@ class AttendanceRepository @Inject constructor(
             } else {
 
                 Result.failure(
-                    Exception("No attendance sessions found")
+                    Exception("No active attendance session found")
                 )
             }
         } catch (e: Exception) {
