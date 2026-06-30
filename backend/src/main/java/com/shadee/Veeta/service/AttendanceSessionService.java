@@ -93,7 +93,7 @@ public class AttendanceSessionService {
         Double completedHours = completed / 60.0;
         Double remainingHours = remaining / 60.0;
         return new AttendanceResponse(
-                sessions, completed, completedHours, remaining, remainingHours
+                sessions, completed, completedHours, remaining, remainingHours, required
         );
     }
 }

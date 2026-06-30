@@ -14,4 +14,5 @@ public class AttendanceResponse {
     public Double totalCompletedHours;
     public Long remainingMinute;
     public Double remainingHours;
+    public Long totalHours;
 }
